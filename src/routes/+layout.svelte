@@ -1,0 +1,18 @@
+<script lang="ts">
+	import '../app.css';
+	import { fly, fade } from 'svelte/transition';
+	import { cubicOut } from 'svelte/easing';
+	import Header from '../components/landing/Header.svelte';
+	import type { LayoutData } from './$types';
+
+	let { data, children }: { data: LayoutData; children: any } = $props();
+</script>
+
+<Header isAuthenticated={data.isAuthenticated} user={data.user} />
+
+<div
+	in:fly={{ x: 40, duration: 300, easing: cubicOut }}
+	out:fade={{ duration: 150 }}
+>
+	{@render children()}
+</div>
