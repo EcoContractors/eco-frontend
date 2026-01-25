@@ -11,6 +11,7 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 
 	return {
 		verified: url.searchParams.get('verified') === 'true',
+		reset: url.searchParams.get('reset') === 'true',
 		redirectTo: url.searchParams.get('redirectTo') || '/dashboard'
 	};
 };

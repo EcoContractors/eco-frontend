@@ -137,7 +137,7 @@
 							</button>
 						</div>
 						<a
-							href={`/clientSignupForm?ref=${userId}`}
+							href={`/signup/${userId}`}
 							class="text-primary underline text-sm lg:text-base max-w-24 md:max-w-44 truncate inline-block align-middle"
 						>
 							Share referral link

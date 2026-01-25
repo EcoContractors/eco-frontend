@@ -38,6 +38,12 @@
 					</div>
 				{/if}
 
+				{#if $page.data.reset}
+					<div class="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-lg text-sm text-center">
+						Password reset successful! You can now sign in with your new password.
+					</div>
+				{/if}
+
 				{#if $page.form?.message}
 					<div class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm text-center">
 						{$page.form.message}

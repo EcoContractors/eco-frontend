@@ -20,8 +20,8 @@
 	<SidebarHeader {onClose} />
 
 	<div class="text-center mt-6 mb-8">
-		<h1 class="text-3xl font-semibold text-gray-900">Sign Up Account</h1>
-		<p class="text-md md:text-2xl text-gray-400 mt-5">Please provide your personal data</p>
+		<h1 class="text-3xl font-semibold text-gray-900">Become an Agent</h1>
+		<p class="text-md md:text-2xl text-gray-400 mt-5">Join our network of professional contractors</p>
 	</div>
 
 	<form
@@ -101,7 +101,7 @@
 				class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"
 				onclick={() => (showPassword = !showPassword)}
 			>
-				{showPassword ? '🙈' : '👁'}
+				{showPassword ? 'Hide' : 'Show'}
 			</button>
 		</div>
 
@@ -124,20 +124,23 @@
 				class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"
 				onclick={() => (showConfirmPassword = !showConfirmPassword)}
 			>
-				{showConfirmPassword ? '🙈' : '👁'}
+				{showConfirmPassword ? 'Hide' : 'Show'}
 			</button>
 		</div>
 
-		<input type="hidden" name="phone" value="" />
-		<input type="hidden" name="role" value="customer" />
-		<input type="hidden" name="referralCode" value="" />
+		<input type="hidden" name="role" value="agent" />
 
 		<div class="w-full md:max-w-md mx-auto my-6 border-t border-gray-300"></div>
+
+		<div class="text-center text-xs text-gray-500 mb-4 px-4">
+			<p>By signing up as an agent, your application will be reviewed by our team.</p>
+			<p class="mt-1">You'll receive an email once your account is approved.</p>
+		</div>
 
 		<div class="flex justify-center mt-6">
 			<Button
 				type="submit"
-				label={isLoading ? 'Creating account...' : 'Create Account'}
+				label={isLoading ? 'Submitting application...' : 'Submit Application'}
 				width="220px"
 				disabled={isLoading}
 			/>
