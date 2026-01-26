@@ -1,9 +1,11 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import Button from './Button.svelte';
 	import { google } from '$lib/assets/images';
 	import SidebarHeader from '../sidebar/SidebarHeader.svelte';
 	import { page } from '$app/stores';
 	import { enhance } from '$app/forms';
+	import { agentApi } from '$lib/api/client';
 
 	interface Props {
 		onClose?: () => void;
@@ -14,6 +16,20 @@
 	let showPassword = $state(false);
 	let showConfirmPassword = $state(false);
 	let isLoading = $state(false);
+	let referralCode = $state<string | null>(null);
+	let referringAgentName = $state<string | null>(null);
+
+	onMount(() => {
+		const ref = $page.url.searchParams.get('ref');
+		if (ref) {
+			referralCode = ref;
+			agentApi.getPublicInfo(ref).then(res => {
+				if (res.agent) {
+					referringAgentName = res.agent.fullName;
+				}
+			}).catch(console.error);
+		}
+	});
 </script>
 
 <section class="p-8 max-w-7xl mx-auto mt-14">
@@ -26,6 +42,7 @@
 
 	<form
 		method="POST"
+		action="/signup"
 		use:enhance={() => {
 			isLoading = true;
 			return async ({ update }) => {
@@ -40,6 +57,14 @@
 				class="p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm text-center mx-auto w-full md:max-w-md"
 			>
 				{$page.form.message}
+			</div>
+		{/if}
+
+		{#if referringAgentName}
+			<div
+				class="p-3 bg-blue-100 border border-blue-400 text-blue-700 rounded-lg text-sm text-center mx-auto w-full md:max-w-md"
+			>
+				You are being referred by <strong>{referringAgentName}</strong>.
 			</div>
 		{/if}
 
@@ -129,6 +154,9 @@
 		</div>
 
 		<input type="hidden" name="role" value="agent" />
+		{#if referralCode}
+			<input type="hidden" name="referralCode" value={referralCode} />
+		{/if}
 
 		<div class="w-full md:max-w-md mx-auto my-6 border-t border-gray-300"></div>
 

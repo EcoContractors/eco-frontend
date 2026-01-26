@@ -17,8 +17,17 @@ declare global {
 				phone?: string;
 				isActive: boolean;
 				isVerified: boolean;
+				agentStatus?: AgentStatus; // Added agentStatus
 			} | null;
 			accessToken: string | null;
+		}
+
+		// Add AgentStatus enum definition
+		enum AgentStatus {
+			pending = 'pending',
+			under_review = 'under_review',
+			approved = 'approved',
+			rejected = 'rejected'
 		}
 
 		interface PageData {

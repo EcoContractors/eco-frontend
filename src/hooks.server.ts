@@ -1,5 +1,6 @@
 import type { Handle } from '@sveltejs/kit';
 import { API_BASE_URL } from '$env/static/private';
+import prisma from '../../src/config/db'; // Corrected path
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const accessToken = event.cookies.get('accessToken');
@@ -48,8 +49,18 @@ export const handle: Handle = async ({ event, resolve }) => {
 							firstName: newPayload.firstName || '',
 							lastName: newPayload.lastName || '',
 							isActive: true,
-							isVerified: true
+							isVerified: true,
+							agentStatus: undefined // Initialize agentStatus
 						};
+						if (event.locals.user.role === 'agent') {
+							const agentProfile = await prisma.agentProfile.findUnique({
+								where: { userId: event.locals.user.id },
+								select: { status: true }
+							});
+							if (agentProfile) {
+								event.locals.user.agentStatus = agentProfile.status;
+							}
+						}
 						event.locals.accessToken = newAccessToken;
 					}
 				} else {
@@ -66,8 +77,18 @@ export const handle: Handle = async ({ event, resolve }) => {
 					firstName: payload.firstName || '',
 					lastName: payload.lastName || '',
 					isActive: true,
-					isVerified: true
+					isVerified: true,
+					agentStatus: undefined // Initialize agentStatus
 				};
+				if (event.locals.user.role === 'agent') {
+					const agentProfile = await prisma.agentProfile.findUnique({
+						where: { userId: event.locals.user.id },
+						select: { status: true }
+					});
+					if (agentProfile) {
+						event.locals.user.agentStatus = agentProfile.status;
+					}
+				}
 				event.locals.accessToken = accessToken;
 			}
 		} catch (error) {

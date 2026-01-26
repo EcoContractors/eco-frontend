@@ -91,3 +91,8 @@ export const api = {
 	delete: <T>(endpoint: string, options?: RequestOptions) =>
 		apiRequest<T>(endpoint, { ...options, method: 'DELETE' })
 };
+
+export const agentApi = {
+	getPublicInfo: (code: string) => api.get<{ agent: { fullName: string } }>(`/agents/public/${code}`)
+};
+

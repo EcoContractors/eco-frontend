@@ -21,6 +21,7 @@ export const actions: Actions = {
 		const password = data.get('password') as string;
 		const confirmPassword = data.get('confirmPassword') as string;
 		const phone = (data.get('phone') as string) || '';
+		const referralCode = data.get('referralCode') as string | undefined;
 
 		// Basic server-side validation
 		if (!firstName || !lastName || !email || !password || !confirmPassword) {
@@ -28,6 +29,7 @@ export const actions: Actions = {
 				firstName,
 				lastName,
 				email,
+				referralCode,
 				message: 'All fields are required'
 			});
 		}
@@ -37,6 +39,7 @@ export const actions: Actions = {
 				firstName,
 				lastName,
 				email,
+				referralCode,
 				message: 'Passwords do not match'
 			});
 		}
@@ -46,6 +49,7 @@ export const actions: Actions = {
 				firstName,
 				lastName,
 				email,
+				referralCode,
 				message: 'Password must be at least 8 characters'
 			});
 		}
@@ -57,7 +61,8 @@ export const actions: Actions = {
 				email,
 				password,
 				phone,
-				role: 'agent'
+				role: 'agent',
+				referralCode
 			});
 
 			// Redirect to verify page with email for context
@@ -68,6 +73,7 @@ export const actions: Actions = {
 					firstName,
 					lastName,
 					email,
+					referralCode,
 					message: error.message
 				});
 			}
@@ -82,6 +88,7 @@ export const actions: Actions = {
 				firstName,
 				lastName,
 				email,
+				referralCode,
 				message: 'An unexpected error occurred. Please try again.'
 			});
 		}

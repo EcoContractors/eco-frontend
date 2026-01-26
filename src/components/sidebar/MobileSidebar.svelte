@@ -3,6 +3,8 @@
 	import { fly } from 'svelte/transition';
 	import { RectangleGoggles, Briefcase, Info, Headset } from 'lucide-svelte';
 	import { onMount } from 'svelte';
+	import type { User, AgentStatus } from '$lib/types'; // Import User and AgentStatus
+	import { addToast } from '../ui/Toast/toast'; // Import addToast
 
 	import SidebarHeader from './SidebarHeader.svelte';
 	import Search from '../ui/Search.svelte';
@@ -14,9 +16,10 @@
 	interface Props {
 		open?: boolean;
 		onClose: () => void;
+		user?: User | null; // Accept user prop
 	}
 
-	let { open = false, onClose }: Props = $props();
+	let { open = false, onClose, user = null }: Props = $props(); // Destructure user
 
 	let isDesktop = $state(false);
 
@@ -54,7 +57,11 @@
 			image={image16}
 			onClick={() => {
 				onClose();
-				goto('/signin');
+				if (user && user.role === 'agent' && user.agentStatus === AgentStatus.pending) {
+					addToast('Your agent application is still pending approval. Please check back later.', 'info');
+				} else {
+					goto('/signin');
+				}
 			}}
 		/>
 

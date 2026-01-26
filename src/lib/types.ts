@@ -1,3 +1,10 @@
+export enum AgentStatus {
+	pending = 'pending',
+	under_review = 'under_review',
+	approved = 'approved',
+	rejected = 'rejected'
+}
+
 export interface User {
 	id: string;
 	email: string;
@@ -7,6 +14,7 @@ export interface User {
 	phone?: string;
 	isActive: boolean;
 	isVerified: boolean;
+	agentStatus?: AgentStatus; // Added agentStatus
 	createdAt?: Date;
 	updatedAt?: Date;
 }

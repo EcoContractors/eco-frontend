@@ -76,4 +76,4 @@
 	</div>
 </header>
 
-<MobileSidebar open={sidebarOpen} onClose={() => (sidebarOpen = false)} />
+<MobileSidebar open={sidebarOpen} onClose={() => (sidebarOpen = false)} {user} />

@@ -10,9 +10,11 @@
 
 <Header isAuthenticated={data.isAuthenticated} user={data.user} />
 
-<div
-	in:fly={{ x: 40, duration: 300, easing: cubicOut }}
-	out:fade={{ duration: 150 }}
->
-	{@render children()}
-</div>
+	<div
+		in:fly={{ x: 40, duration: 300, easing: cubicOut }}
+		out:fade={{ duration: 150 }}
+	>
+		{@render children()}
+	</div>
+
+	<Toast />
