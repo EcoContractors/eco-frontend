@@ -7,4 +7,7 @@ export default defineConfig({
     tailwindcss(),
     sveltekit(),
   ],
+  ssr: {
+    external: ['@prisma/client'],
+  },
 });
