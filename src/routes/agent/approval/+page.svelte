@@ -2,9 +2,6 @@
 	import type { PageData } from './$types';
 
 	const { data } = $props<{ data: PageData }>();
-
-	const isSuccess = data.approvalStatus === 'success';
-	const isError = data.approvalStatus === 'error';
 </script>
 
 <svelte:head>
@@ -13,12 +10,12 @@
 
 <div class="approval-page">
 	<div class="container">
-		{#if isSuccess}
+		{#if data.approvalStatus === 'success'}
 			<div class="icon success">✓</div>
 			<h2>Success!</h2>
 			<p>{data.message}</p>
 			<a href="/" class="btn">Go to Homepage</a>
-		{:else if isError}
+		{:else if data.approvalStatus === 'error'}
 			<div class="icon error">✗</div>
 			<h2>Error</h2>
 			<p>{data.message}</p>
