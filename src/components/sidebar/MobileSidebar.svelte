@@ -3,7 +3,8 @@
 	import { fly } from 'svelte/transition';
 	import { RectangleGoggles, Briefcase, Info, Headset } from 'lucide-svelte';
 	import { onMount } from 'svelte';
-	import type { User, AgentStatus } from '$lib/types'; // Import User and AgentStatus
+	import type { User } from '$lib/types';
+	import { AgentStatus } from '$lib/types';
 	import { addToast } from '../ui/Toast/toast'; // Import addToast
 
 	import SidebarHeader from './SidebarHeader.svelte';
