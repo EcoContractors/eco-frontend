@@ -104,7 +104,6 @@
 					</div>
 				</div>
 
-				{#if isAgent}
 				{#if isApprovedAgent}
 					<div>
 						<h1 class="font-semibold text-md md:text-2xl">
