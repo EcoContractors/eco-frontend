@@ -1,42 +1,7 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { page } from '$app/stores';
-	import { serverApi } from '$lib/server/api';
+	import type { PageData } from './$types';
 
-	let status = $state<'loading' | 'success' | 'error'>('loading');
-	let message = $state('');
-
-	onMount(async () => {
-		const token = $page.url.searchParams.get('token');
-		const action = $page.url.searchParams.get('action');
-
-		if (!token || !action) {
-			status = 'error';
-			message = 'Invalid approval link. Missing token or action.';
-			return;
-		}
-
-		try {
-			const result = await serverApi.get<{ message: string; success: boolean }>(
-				`/auth/agent-approval?token=${token}&action=${action}`
-			);
-
-			if (result.success) {
-				status = 'success';
-				message = result.message;
-			} else {
-				status = 'error';
-				message = result.message || 'An unknown error occurred.';
-			}
-		} catch (error) {
-			status = 'error';
-			if (error instanceof Error) {
-				message = error.message;
-			} else {
-				message = 'An unexpected error occurred while processing the request.';
-			}
-		}
-	});
+	const { data }: { data: PageData } = $props();
 </script>
 
 <svelte:head>
@@ -45,23 +10,23 @@
 
 <div class="approval-page">
 	<div class="container">
-		{#if status === 'loading'}
+		{#if data.status === 'loading'}
 			<div class="spinner"></div>
 			<h2>Processing...</h2>
 			<p>Please wait while we process the agent approval.</p>
 		{/if}
 
-		{#if status === 'success'}
+		{#if data.status === 'success'}
 			<div class="icon success">✓</div>
 			<h2>Success!</h2>
-			<p>{message}</p>
+			<p>{data.message}</p>
 			<a href="/" class="btn">Go to Homepage</a>
 		{/if}
 
-		{#if status === 'error'}
+		{#if data.status === 'error'}
 			<div class="icon error">✗</div>
 			<h2>Error</h2>
-			<p>{message}</p>
+			<p>{data.message}</p>
 			<a href="/" class="btn">Go to Homepage</a>
 		{/if}
 	</div>
