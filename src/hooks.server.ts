@@ -1,6 +1,5 @@
 import type { Handle } from '@sveltejs/kit';
 import { API_BASE_URL } from '$env/static/private';
-import prisma from '../../src/config/db'; // Corrected path
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const accessToken = event.cookies.get('accessToken');
@@ -52,15 +51,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 							isVerified: true,
 							agentStatus: undefined // Initialize agentStatus
 						};
-						if (event.locals.user.role === 'agent') {
-							const agentProfile = await prisma.agentProfile.findUnique({
-								where: { userId: event.locals.user.id },
-								select: { status: true }
-							});
-							if (agentProfile) {
-								event.locals.user.agentStatus = agentProfile.status;
-							}
-						}
 						event.locals.accessToken = newAccessToken;
 					}
 				} else {
@@ -70,7 +60,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 				}
 			} else if (!isExpired) {
 				// Token is valid
-				event.locals.user = {
+					event.locals.user = {
 					id: payload.userId,
 					email: payload.email,
 					role: payload.role,
@@ -80,15 +70,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 					isVerified: true,
 					agentStatus: undefined // Initialize agentStatus
 				};
-				if (event.locals.user.role === 'agent') {
-					const agentProfile = await prisma.agentProfile.findUnique({
-						where: { userId: event.locals.user.id },
-						select: { status: true }
-					});
-					if (agentProfile) {
-						event.locals.user.agentStatus = agentProfile.status;
-					}
-				}
 				event.locals.accessToken = accessToken;
 			}
 		} catch (error) {
