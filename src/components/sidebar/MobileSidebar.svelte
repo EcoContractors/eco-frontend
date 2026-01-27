@@ -51,19 +51,28 @@
 		<SidebarHeader {onClose} />
 		<Search />
 
-		<SidebarFeatureCard
-			title="Agent portal"
-			subtitle="Get the best agents."
-			image={image16}
-			onClick={() => {
-				onClose();
-				if (user && user.role === 'agent' && user.agentStatus === AgentStatus.pending) {
-					addToast('Your agent application is still pending approval. Please check back later.', 'info');
-				} else {
-					goto('/signin');
-				}
-			}}
-		/>
+			<SidebarFeatureCard
+				title="Agent portal"
+				subtitle="Get the best agents."
+				image={image16}
+				onClick={() => {
+					onClose();
+					if (!user) {
+						goto('/signin?redirectTo=/dashboard');
+					} else if (user.role === 'agent') {
+						if (user.agentStatus === AgentStatus.approved) {
+							goto('/dashboard');
+						} else {
+							addToast(
+								`Your agent application is currently ${user.agentStatus ?? 'pending'}. Please await admin approval.`,
+								'info'
+							);
+						}
+					} else {
+						addToast('Only approved agents can access the agent portal.', 'info');
+					}
+				}}
+			/>
 
 		<div class="px-2 space-y-1">
 			<SidebarNavItem

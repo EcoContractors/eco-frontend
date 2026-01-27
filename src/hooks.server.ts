@@ -1,6 +1,26 @@
 import type { Handle } from '@sveltejs/kit';
 import { API_BASE_URL } from '$env/static/private';
 
+async function loadAgentStatus(token: string): Promise<string | undefined> {
+	try {
+		const response = await fetch(`${API_BASE_URL}/api/v1/agents/profile`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+				'Content-Type': 'application/json'
+			}
+		});
+
+		if (!response.ok) return undefined;
+
+		const data = await response.json().catch(() => null as unknown);
+		const status = (data as any)?.agent?.status;
+		return typeof status === 'string' ? status : undefined;
+	} catch (error) {
+		console.error('Error loading agent status in hooks.server:', error);
+		return undefined;
+	}
+}
+
 export const handle: Handle = async ({ event, resolve }) => {
 	const accessToken = event.cookies.get('accessToken');
 	const refreshToken = event.cookies.get('refreshToken');
@@ -51,6 +71,15 @@ export const handle: Handle = async ({ event, resolve }) => {
 							isVerified: true,
 							agentStatus: undefined // Initialize agentStatus
 						};
+
+						// If user is an agent, fetch their current agent status from the backend
+						if (event.locals.user.role === 'agent') {
+							const status = await loadAgentStatus(newAccessToken);
+							if (status) {
+								event.locals.user.agentStatus = status as any;
+							}
+						}
+
 						event.locals.accessToken = newAccessToken;
 					}
 				} else {
@@ -70,6 +99,14 @@ export const handle: Handle = async ({ event, resolve }) => {
 					isVerified: true,
 					agentStatus: undefined // Initialize agentStatus
 				};
+
+				if (event.locals.user.role === 'agent') {
+					const status = await loadAgentStatus(accessToken);
+					if (status) {
+						event.locals.user.agentStatus = status as any;
+					}
+				}
+
 				event.locals.accessToken = accessToken;
 			}
 		} catch (error) {

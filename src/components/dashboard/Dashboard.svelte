@@ -2,6 +2,7 @@
 	import SidebarHeader from '../sidebar/SidebarHeader.svelte';
 	import { Copy, Check } from 'lucide-svelte';
 	import type { User } from '$lib/types';
+	import { AgentStatus } from '$lib/types';
 
 	interface Props {
 		user?: User | null;
@@ -13,7 +14,8 @@
 	// Derive display values from user
 	let displayName = $derived(user ? `${user.firstName} ${user.lastName}` : 'Guest');
 	let userId = $derived(user?.id?.slice(0, 8).toUpperCase() || 'N/A');
-	let isAgent = $derived(user?.role === 'agent');
+	let agentStatus = $derived(user?.agentStatus);
+	let isApprovedAgent = $derived(user?.role === 'agent' && agentStatus === AgentStatus.approved);
 
 	let copied = $state(false);
 
@@ -71,8 +73,8 @@
 		</div>
 
 		<div class="bg-white rounded-2xl pb-6 lg:pb-10 shadow-[0_10px_20px_-8px_rgba(0,0,0,0.15)]">
-			<div class="py-10 px-4 lg:px-10 flex items-center justify-between">
-				<div>
+				<div class="py-10 px-4 lg:px-10 flex items-center justify-between">
+					<div>
 					<h2 class="font-semibold text-md md:text-2xl">Project Information</h2>
 
 					<div
@@ -103,6 +105,7 @@
 				</div>
 
 				{#if isAgent}
+				{#if isApprovedAgent}
 					<div>
 						<h1 class="font-semibold text-md md:text-2xl">
 							Agent Rating
@@ -160,6 +163,12 @@
 								<span class="text-red-500">✗</span> Account Inactive
 							{/if}
 						</p>
+
+						{#if user?.role === 'agent' && agentStatus && agentStatus !== AgentStatus.approved}
+							<p class="text-sm lg:text-lg text-blue-600 mt-2">
+								Your agent application is currently <strong>{agentStatus}</strong>. Please await admin approval before accessing the full agent portal.
+							</p>
+						{/if}
 					</div>
 				{/if}
 			</div>
