@@ -21,7 +21,13 @@ export const actions: Actions = {
 		const password = data.get('password') as string;
 		const confirmPassword = data.get('confirmPassword') as string;
 		const phone = (data.get('phone') as string) || '';
-		const referralCode = data.get('referralCode') as string | undefined;
+
+		// Normalize optional referral code: only keep non-empty strings
+		const rawReferralCode = data.get('referralCode');
+		const referralCode =
+			typeof rawReferralCode === 'string' && rawReferralCode.trim() !== ''
+				? rawReferralCode.trim()
+				: undefined;
 
 		// Basic server-side validation
 		if (!firstName || !lastName || !email || !password || !confirmPassword) {
@@ -55,15 +61,20 @@ export const actions: Actions = {
 		}
 
 		try {
-			await serverApi.post<RegisterResponse>('/auth/register', {
+			const payload: Record<string, unknown> = {
 				firstName,
 				lastName,
 				email,
 				password,
 				phone,
-				role: 'agent',
-				referralCode
-			});
+				role: 'agent'
+			};
+
+			if (referralCode) {
+				payload.referralCode = referralCode;
+			}
+
+			await serverApi.post<RegisterResponse>('/auth/register', payload);
 
 			// Redirect to verify page with email for context
 			throw redirect(303, `/verify?email=${encodeURIComponent(email)}&registered=true`);
