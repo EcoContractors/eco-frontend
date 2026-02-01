@@ -6,6 +6,7 @@
 	import Toast from '../components/ui/Toast/Toast.svelte';
 	import ChatWidget from '../components/chat/ChatWidget.svelte';
 	import type { LayoutData } from './$types';
+  import Footer from '../components/landing/Footer.svelte';
 
 	let { data, children }: { data: LayoutData; children: any } = $props();
 </script>
@@ -18,6 +19,7 @@
 	>
 		{@render children()}
 	</div>
+	<Footer />
 
 	<Toast />
 	<ChatWidget />
