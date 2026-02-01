@@ -1,7 +1,9 @@
 import { goto } from '$app/navigation';
 import { browser } from '$app/environment';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || '';
+// All requests go to /api/v1/... which SvelteKit proxies to the Express backend,
+// avoiding CORS issues in the browser. Auth cookies are forwarded automatically.
+const API_BASE_URL = '/api/v1';
 
 export interface RequestOptions extends RequestInit {
 	params?: Record<string, string | number | boolean | undefined>;
@@ -11,7 +13,12 @@ export interface RequestOptions extends RequestInit {
  * Build URL with query parameters
  */
 function buildUrl(endpoint: string, params?: Record<string, string | number | boolean | undefined>): string {
-	const url = new URL(`${API_BASE_URL}${endpoint}`);
+	const fullPath = `${API_BASE_URL}${endpoint}`;
+	// If API_BASE_URL is absolute, use URL constructor directly.
+	// Otherwise, resolve against window.location.origin for relative paths.
+	const url = fullPath.startsWith('http')
+		? new URL(fullPath)
+		: new URL(fullPath, typeof window !== 'undefined' ? window.location.origin : 'http://localhost');
 
 	if (params) {
 		Object.entries(params).forEach(([key, value]) => {
@@ -94,5 +101,45 @@ export const api = {
 
 export const agentApi = {
 	getPublicInfo: (code: string) => api.get<{ agent: { fullName: string } }>(`/agents/public/${code}`)
+};
+
+import type {
+	Equipment,
+	BookInspectionRequest,
+	BookInspectionResponse,
+	CreateSessionResponse,
+	SendMessageResponse,
+	GetMessagesResponse,
+	SubmitLeadResponse
+} from '$lib/types';
+
+export const equipmentApi = {
+	getAll: (params?: { type?: string; search?: string; categoryId?: string }) =>
+		api.get<{ equipment: Equipment[] }>('/equipment', { params }),
+
+	getBySlug: (slug: string) =>
+		api.get<{ equipment: Equipment }>(`/equipment/${slug}`)
+};
+
+export const appointmentApi = {
+	book: (data: BookInspectionRequest) =>
+		api.post<BookInspectionResponse>('/appointments', data)
+};
+
+export const chatApi = {
+	createSession: (visitorId?: string) =>
+		api.post<CreateSessionResponse>('/chat/sessions', visitorId ? { visitorId } : {}),
+
+	sendMessage: (sessionId: string, message: string) =>
+		api.post<SendMessageResponse>(`/chat/sessions/${sessionId}/messages`, { message }),
+
+	getMessages: (sessionId: string) =>
+		api.get<GetMessagesResponse>(`/chat/sessions/${sessionId}/messages`),
+
+	submitLead: (sessionId: string, data: { name?: string; email?: string; phone?: string; company?: string }) =>
+		api.post<SubmitLeadResponse>(`/chat/sessions/${sessionId}/lead`, data),
+
+	endSession: (sessionId: string) =>
+		api.post<{ session: any }>(`/chat/sessions/${sessionId}/end`)
 };
 

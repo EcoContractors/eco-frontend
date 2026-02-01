@@ -4,6 +4,7 @@
 	import { cubicOut } from 'svelte/easing';
 	import Header from '../components/landing/Header.svelte';
 	import Toast from '../components/ui/Toast/Toast.svelte';
+	import ChatWidget from '../components/chat/ChatWidget.svelte';
 	import type { LayoutData } from './$types';
 
 	let { data, children }: { data: LayoutData; children: any } = $props();
@@ -19,3 +20,4 @@
 	</div>
 
 	<Toast />
+	<ChatWidget />

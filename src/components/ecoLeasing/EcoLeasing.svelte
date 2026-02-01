@@ -1,21 +1,54 @@
 <script lang="ts">
-  import SidebarHeader from "../sidebar/SidebarHeader.svelte";
-  import Search from "../ui/Search.svelte";
+  import { onMount } from "svelte";
   import EquipmentCard from "./EquipmentCard.svelte";
-  import { equipmentList } from "$lib/data/equipment";
+  import { equipmentApi } from "$lib/api/client";
+  import type { Equipment } from "$lib/types";
 
   export let agentRef: string | null = null;
   if (!agentRef && typeof window !== "undefined") {
     agentRef = localStorage.getItem("agentRef");
   }
 
-
   let activeTab: "all" | "sale" | "lease" = "all";
+  let equipment: Equipment[] = [];
+  let loading = true;
+  let error: string | null = null;
+  let searchQuery = "";
 
-  $: filteredEquipment =
-    activeTab === "all"
-      ? equipmentList
-      : equipmentList.filter((item) => item.type === activeTab);
+  onMount(async () => {
+    await loadEquipment();
+  });
+
+  async function loadEquipment() {
+    loading = true;
+    error = null;
+    try {
+      const data = await equipmentApi.getAll();
+      equipment = data.equipment;
+    } catch (err) {
+      error = err instanceof Error ? err.message : "Failed to load equipment";
+    } finally {
+      loading = false;
+    }
+  }
+
+  $: filteredEquipment = equipment.filter((item) => {
+    // Tab filter
+    if (activeTab === "sale" && item.listingType !== "sale" && item.listingType !== "both") return false;
+    if (activeTab === "lease" && item.listingType !== "lease" && item.listingType !== "both") return false;
+
+    // Search filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      return (
+        item.name.toLowerCase().includes(query) ||
+        item.manufacturer?.toLowerCase().includes(query) ||
+        item.model?.toLowerCase().includes(query) ||
+        item.category?.name?.toLowerCase().includes(query)
+      );
+    }
+    return true;
+  });
 </script>
 
 <section class="p-6 mt-14">
@@ -61,21 +94,48 @@
   <div class="my-10 bg-tertiary py-10 h-full rounded-lg">
     <h1 class="text-2xl font-semibold px-6">Equipment</h1>
 
-    <div class="mt-3">
-      <Search />
+    <div class="mt-3 px-4">
+      <input
+        type="text"
+        placeholder="Search..."
+        bind:value={searchQuery}
+        class="mb-4 px-4 py-2 w-full
+               border border-green-400 rounded-md
+               focus:outline-none bg-white shadow-lg"
+      />
     </div>
 
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-6 px-4">
-      {#each filteredEquipment as item}
-        <EquipmentCard
-          slug={item.slug}
-          images={item.images}
-          name={item.name}
-          available={item.available}
-          mode={activeTab}
-          agentRef={agentRef}
-        />
-      {/each}
-    </div>
+    {#if loading}
+      <div class="flex items-center justify-center py-20">
+        <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
+      </div>
+    {:else if error}
+      <div class="text-center py-20 px-4">
+        <p class="text-red-500 mb-4">{error}</p>
+        <button
+          on:click={loadEquipment}
+          class="px-4 py-2 bg-primary text-white rounded-md"
+        >
+          Retry
+        </button>
+      </div>
+    {:else if filteredEquipment.length === 0}
+      <div class="text-center py-20 text-gray-500">
+        <p>No equipment found</p>
+      </div>
+    {:else}
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-6 px-4">
+        {#each filteredEquipment as item}
+          <EquipmentCard
+            slug={item.slug}
+            image={item.media?.find((m) => m.isPrimary)?.url || item.media?.[0]?.url || ''}
+            name={item.name}
+            available={item.isAvailable}
+            mode={activeTab}
+            agentRef={agentRef}
+          />
+        {/each}
+      </div>
+    {/if}
   </div>
 </section>

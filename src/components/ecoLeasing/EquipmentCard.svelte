@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let images: string[];
+  export let image: string;
   export let name: string;
   export let available: boolean;
   export let slug: string;
@@ -13,11 +13,19 @@
          p-0.5 md:p-2 shadow-sm"
 >
   <div class="relative">
-    <img
-      src={images[0]}
-      alt={name}
-      class="w-full h-28 object-cover rounded-lg"
-    /> 
+    {#if image}
+      <img
+        src={image}
+        alt={name}
+        class="w-full h-28 object-cover rounded-lg"
+      />
+    {:else}
+      <div class="w-full h-28 rounded-lg bg-gray-200 flex items-center justify-center">
+        <svg class="w-10 h-10 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+        </svg>
+      </div>
+    {/if}
   </div>
 
   <div class="flex items-center justify-center md:justify-between gap-2 my-3 p-0.5 md:px-3">
