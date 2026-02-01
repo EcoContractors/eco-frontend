@@ -1,0 +1,174 @@
+<script lang="ts">
+	import Button from '../../../components/ui/Button.svelte';
+	import { google } from '$lib/assets/images';
+	import SidebarHeader from '../../../components/sidebar/SidebarHeader.svelte';
+	import { page } from '$app/stores';
+	import { enhance } from '$app/forms';
+
+	let showPassword = $state(false);
+	let showConfirmPassword = $state(false);
+	let isLoading = $state(false);
+
+	const { data } = $props();
+</script>
+
+<section class="p-8 max-w-7xl mx-auto mt-14">
+	<SidebarHeader />
+
+	{#if !data.valid}
+		<!-- Invalid referral code error page -->
+		<div class="text-center mt-6 mb-8">
+			<h1 class="text-3xl font-semibold text-gray-900">Invalid Referral Link</h1>
+			<p class="text-md md:text-xl text-gray-500 mt-5 max-w-md mx-auto">
+				{data.error || 'This referral link is invalid or the agent is no longer active.'}
+			</p>
+		</div>
+
+		<div class="flex flex-col items-center gap-4 mt-8">
+			<p class="text-gray-600">Want to become an agent instead?</p>
+			<a
+				href="/signup"
+				class="inline-block px-6 py-3 rounded-full bg-primary text-white font-medium hover:bg-primary/90 transition"
+			>
+				Apply as an Agent
+			</a>
+			<a href="/signin" class="text-sm text-primary hover:underline mt-2">
+				Already have an account? Sign in
+			</a>
+		</div>
+	{:else}
+		<!-- Valid referral code - show signup form -->
+		<div class="text-center mt-6 mb-8">
+			<h1 class="text-3xl font-semibold text-gray-900">Create Your Account</h1>
+			<p class="text-md md:text-xl text-gray-400 mt-5">
+				You've been referred by <span class="text-primary font-medium">{data.agentName}</span>
+			</p>
+		</div>
+
+		<form
+			method="POST"
+			use:enhance={() => {
+				isLoading = true;
+				return async ({ update }) => {
+					await update();
+					isLoading = false;
+				};
+			}}
+			class="rounded-2xl border border-primary/40 bg-white/40 backdrop-blur-xl shadow-xl p-6 space-y-4 w-full md:w-lg lg:w-xl mx-auto"
+		>
+			{#if $page.form?.message}
+				<div
+					class="p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm text-center mx-auto w-full md:max-w-md"
+				>
+					{$page.form.message}
+				</div>
+			{/if}
+
+			<div class="mx-auto w-full md:max-w-md">
+				<div class="grid grid-cols-2 gap-3">
+					<input
+						type="text"
+						placeholder="First Name"
+						name="firstName"
+						required
+						value={$page.form?.firstName || ''}
+						class="w-full px-4 py-3 rounded-md bg-white text-sm outline-none focus:ring-2 focus:ring-primary"
+					/>
+
+					<input
+						type="text"
+						placeholder="Last Name"
+						name="lastName"
+						required
+						value={$page.form?.lastName || ''}
+						class="w-full px-4 py-3 rounded-md bg-white text-sm outline-none focus:ring-2 focus:ring-primary"
+					/>
+				</div>
+			</div>
+
+			<div class="relative w-full md:max-w-md mx-auto">
+				<input
+					type="email"
+					placeholder="Email Address"
+					name="email"
+					required
+					value={$page.form?.email || ''}
+					class="w-full px-4 py-3 rounded-md bg-white text-sm outline-none focus:ring-2 focus:ring-primary"
+				/>
+			</div>
+
+			<div class="relative w-full md:max-w-md mx-auto">
+				<input
+					type="tel"
+					placeholder="Phone Number (e.g. +2348012345678)"
+					name="phone"
+					value={$page.form?.phone || ''}
+					class="w-full px-4 py-3 rounded-md bg-white text-sm outline-none focus:ring-2 focus:ring-primary"
+				/>
+			</div>
+
+			<div class="relative w-full md:max-w-md mx-auto">
+				<input
+					type={showPassword ? 'text' : 'password'}
+					placeholder="Password"
+					name="password"
+					required
+					minlength="8"
+					class="w-full px-4 py-3 rounded-md bg-white text-sm outline-none focus:ring-2 focus:ring-primary"
+				/>
+
+				<button
+					type="button"
+					class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"
+					onclick={() => (showPassword = !showPassword)}
+				>
+					{showPassword ? 'Hide' : 'Show'}
+				</button>
+			</div>
+
+			<p class="text-xs text-gray-400 px-0 md:px-2 lg:px-10">
+				Must be at least 8 characters with uppercase, lowercase, number, and special character
+			</p>
+
+			<div class="relative w-full md:max-w-md mx-auto">
+				<input
+					type={showConfirmPassword ? 'text' : 'password'}
+					placeholder="Confirm Password"
+					name="confirmPassword"
+					required
+					minlength="8"
+					class="w-full px-4 py-3 rounded-md bg-white text-sm outline-none focus:ring-2 focus:ring-primary"
+				/>
+
+				<button
+					type="button"
+					class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"
+					onclick={() => (showConfirmPassword = !showConfirmPassword)}
+				>
+					{showConfirmPassword ? 'Hide' : 'Show'}
+				</button>
+			</div>
+
+			<div class="w-full md:max-w-md mx-auto my-6 border-t border-gray-300"></div>
+
+			<div class="flex justify-center mt-6">
+				<Button
+					type="submit"
+					label={isLoading ? 'Creating account...' : 'Create Account'}
+					width="220px"
+					disabled={isLoading}
+				/>
+			</div>
+
+			<p class="text-xs text-center text-gray-400 mt-4">
+				Already have an account?
+				<a href="/signin" class="text-primary font-medium"> Sign in </a>
+			</p>
+
+			<div class="flex items-center justify-center gap-2 text-xs text-gray-500 mt-6">
+				<img src={google} alt="Google" class="w-4 h-4" />
+				<span>Sign up with Google</span>
+			</div>
+		</form>
+	{/if}
+</section>
