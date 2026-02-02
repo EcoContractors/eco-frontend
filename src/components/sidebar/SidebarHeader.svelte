@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ArrowLeft } from 'lucide-svelte';
+	import { X } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
 
 	interface Props {
@@ -20,7 +20,7 @@
 </script>
 
 <div class="flex items-center justify-between px-4 pt-4 pb-6">
-	<button type="button" aria-label="Go back" class="ml-auto p-2 cursor-pointer" onclick={handleBack}>
-		<ArrowLeft size={20} />
+	<button type="button" aria-label="Close" class="ml-auto p-2 cursor-pointer hover:text-red-600" onclick={handleBack}>
+		<X size={20} />
 	</button>
 </div>
