@@ -272,6 +272,7 @@
                 <button
                   type="button"
                   onclick={() => scrollThumbnails("left")}
+                  aria-label="Scroll thumbnails left"
                   class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white shadow rounded-full p-1 hidden md:flex items-center justify-center"
                 >
                   <svg class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -281,6 +282,7 @@
                 <button
                   type="button"
                   onclick={() => scrollThumbnails("right")}
+                  aria-label="Scroll thumbnails right"
                   class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white shadow rounded-full p-1 hidden md:flex items-center justify-center"
                 >
                   <svg class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -298,6 +300,7 @@
                   <button
                     type="button"
                     onclick={() => (activeImage = media.url)}
+                    aria-label={`View ${equipment?.name ?? "equipment"} image`}
                     class="flex-shrink-0 snap-center p-2 rounded-lg border transition
                       {media.url === activeImage
                         ? 'border-primary ring-2 ring-primary'
