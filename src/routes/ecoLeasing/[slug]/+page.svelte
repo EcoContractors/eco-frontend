@@ -1,12 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import SidebarHeader from "../../../components/sidebar/SidebarHeader.svelte";
+
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
   import { equipmentApi } from "$lib/api/client";
   import type { Equipment } from "$lib/types";
 
-  export let onClose: (() => void) | undefined;
+
 
   let equipment: Equipment | null = null;
   let loading = true;
@@ -73,7 +73,7 @@
 <section class="min-h-screen bg-tertiary p-4 md:px-30 mt-14">
   <div class="flex items-center justify-between">
     <h1 class="text-lg md:text-2xl font-semibold mb-4 px-4">Equipment</h1>
-    <SidebarHeader {onClose}/>
+    
   </div>
 
   {#if loading}
