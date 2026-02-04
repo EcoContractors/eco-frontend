@@ -17,7 +17,7 @@
 				image={service.image}
 				title={service.title}
 				description={service.description}
-				onAction={() => console.log(service.title)}
+				route={service.title === 'Eco Leasing / Sales' ? '/ecoLeasing' : '/services'}
 			/>
 		{/each}
 	</div>

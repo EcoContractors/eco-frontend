@@ -5,7 +5,7 @@
   import ServiceDetailCard from '../../components/services/ServiceDetailCard.svelte';
 </script>
 
-<div class="container mx-auto  md:py-16 overflow-x-hidden">
+<div class="md:py-16 overflow-x-hidden">
 	<Carousel slides={servicesCarouselData} autoplay={true} interval={4000} />
 </div>
 <div class="container mx-auto px-4 py-16">

@@ -7,13 +7,16 @@
 		title: string;
 		description: string;
 		onAction?: () => void;
+		route?: string; // Add optional route prop
 	}
 
-	let { image, title, description, onAction }: Props = $props();
+	let { image, title, description, onAction, route }: Props = $props();
 
 	function handleAction() {
 		if (onAction) {
 			onAction();
+		} else if (route) {
+			goto(route);
 		} else {
 			goto('/services');
 		}

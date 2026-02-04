@@ -2,10 +2,10 @@
 	import { onMount } from 'svelte';
 	import Button from './Button.svelte';
 	import { google } from '$lib/assets/images';
-	import SidebarHeader from '../sidebar/SidebarHeader.svelte';
 	import { page } from '$app/stores';
 	import { enhance } from '$app/forms';
 	import { agentApi } from '$lib/api/client';
+  import { ArrowLeft } from 'lucide-svelte';
 
 	interface Props {
 		onClose?: () => void;
@@ -33,7 +33,11 @@
 </script>
 
 <section class="p-8 max-w-7xl mx-auto mt-14">
-	<SidebarHeader {onClose} />
+	<div class="flex items-center justify-between px-4 pt-4 pb-6">
+		<button type="button" aria-label="Go back" class="ml-auto p-2 cursor-pointer" onclick={handleBack}>
+			<ArrowLeft size={20} />
+		</button>
+	</div>
 
 	<div class="text-center mt-6 mb-8">
 		<h1 class="text-3xl font-semibold text-gray-900">Become an Agent</h1>
