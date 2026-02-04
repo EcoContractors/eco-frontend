@@ -1,4 +1,4 @@
-import { redirect } from '@sveltejs/kit';
+import { redirect, isRedirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { serverApi, ServerApiError } from '$lib/server/api';
 import type { ApiResponse } from '$lib/types';
@@ -13,9 +13,10 @@ export const load: PageServerLoad = async ({ url }) => {
 		try {
 			await serverApi.post<ApiResponse>('/auth/verify-email', { token });
 			// Redirect to signin with success message
-			throw redirect(303, '/signin?verified=true');
+			redirect(303, '/signin?verified=true');
 		} catch (error) {
-			if (error && typeof error === 'object' && 'status' in error && error.status === 303) {
+			// Re-throw SvelteKit redirects
+			if (isRedirect(error)) {
 				throw error;
 			}
 
