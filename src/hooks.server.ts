@@ -1,5 +1,7 @@
 import type { Handle } from '@sveltejs/kit';
-import { API_BASE_URL } from '$env/static/private';
+import { env } from '$env/dynamic/private';
+
+const API_BASE_URL = env.API_BASE_URL ?? 'http://localhost:5000';
 
 async function loadAgentStatus(token: string): Promise<string | undefined> {
 	try {

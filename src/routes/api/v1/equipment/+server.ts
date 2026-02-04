@@ -1,4 +1,6 @@
-import { API_BASE_URL } from '$env/static/private';
+import { env } from '$env/dynamic/private';
+
+const API_BASE_URL = env.API_BASE_URL ?? 'http://localhost:5000';
 
 export async function GET({ url }: { url: URL }) {
 	const targetUrl = `${API_BASE_URL}/api/v1/equipment${url.search}`;

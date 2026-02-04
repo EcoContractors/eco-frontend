@@ -28,9 +28,6 @@
 		form.submit();
 	}
 
-	function handleLogin() {
-		goto('/signin');
-	}
 </script>
 
 <header class="fixed top-0 z-50 flex items-center px-4 py-3 bg-white shadow-md w-full">
@@ -53,14 +50,6 @@
 				class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300 mr-2"
 			>
 				Logout
-			</button>
-		{:else}
-			<button
-				type="button"
-				onclick={handleLogin}
-				class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-300 mr-2"
-			>
-				Login
 			</button>
 		{/if}
 

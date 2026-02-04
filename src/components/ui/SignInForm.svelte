@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { google, staff } from '$lib/assets/images';
-	import SidebarHeader from '../sidebar/SidebarHeader.svelte';
+	
 	import Button from '../ui/Button.svelte';
 	import { page } from '$app/stores';
 	import { enhance } from '$app/forms';
+  import { ArrowLeft } from 'lucide-svelte';
 
 	let showPassword = $state(false);
 	let isLoading = $state(false);
@@ -102,7 +103,7 @@
 			</form>
 		</div>
 		<div class="order-first lg:order-0">
-			<SidebarHeader />
+			<ArrowLeft />
 		</div>
 	</div>
 </section>

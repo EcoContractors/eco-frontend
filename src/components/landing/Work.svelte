@@ -7,14 +7,14 @@
 <section>
     <div class="relative my-6 flex justify-end md:justify-between">
       <div>
-        <img src={image17} alt="" class=" absolute left-2 -top-14 md:-top-10 w-44 lg:w-sm h-60 lg:h-76 z-1">
+        <img src={image17} alt="" class=" absolute left-2 -top-10 md:-top-10 w-44 lg:w-sm h-86 md:h-56 lg:h-96 z-0">
       </div>
-    <div class="w-32 md:w-md">
+    <div class="w-32 sm:w-md">
         <p class="text-2xl md:text-4xl lg:text-6xl font-semibold">Our work team is our <span class="text-primary font-bold">Strength</span></p>
         <p class="md:text-xl">Lorem ipsum dolor, sit amet consectetur adipisicing elit.</p>
     </div>
 </div>
- <div class="relative rounded-lg overflow-hidden shadow-lg z-10 md:mt-14 lg:mt-20">
+ <!-- <div class="relative w-screen top-12 left-1/2 -translate-x-1/2 overflow-hidden shadow-lg z-10 md:mt-14 lg:mt-20">
     <img
       src={image15}
       alt="Eco Contractors"
@@ -30,5 +30,5 @@
         class="md:w-xl lg:w-2xl "
       />
     </div>
-  </div>
+  </div> -->
 </section>

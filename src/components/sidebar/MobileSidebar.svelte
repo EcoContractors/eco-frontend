@@ -100,17 +100,10 @@
 					goto('/about');
 				}}
 			/>
-			<SidebarNavItem
-				icon={Info}
-				label="Faq"
-				onClick={() => {
-					onClose();
-					goto('/faq');
-				}}
-			/>
+			
 			<SidebarNavItem
 				icon={Headset}
-				label="Help"
+				label="Help & Support"
 				onClick={() => {
 					onClose();
 					goto('/help');
