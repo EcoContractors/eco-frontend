@@ -59,6 +59,27 @@
     });
   }
 
+  async function verifyPayment(reference: string) {
+    paymentStatus = "processing";
+    try {
+      const result = await leaseApi.verify({
+        reference: booking!.bookingNumber,
+        paystackReference: reference,
+      });
+
+      if (result.success) {
+        booking = result.booking;
+        paymentStatus = "success";
+      } else {
+        verifyError = result.message || "Payment verification failed";
+        paymentStatus = "failed";
+      }
+    } catch (err) {
+      verifyError = err instanceof Error ? err.message : "Failed to verify payment";
+      paymentStatus = "failed";
+    }
+  }
+
   function handlePayNow() {
     if (!booking || !paystackLoaded) return;
 
@@ -89,28 +110,11 @@
           },
         ],
       },
-      callback: async (response: { reference: string }) => {
+      callback: function (response: { reference: string }) {
         // Payment successful - verify with backend
-        paymentStatus = "processing";
-        try {
-          const result = await leaseApi.verify({
-            reference: booking!.bookingNumber,
-            paystackReference: response.reference,
-          });
-
-          if (result.success) {
-            booking = result.booking;
-            paymentStatus = "success";
-          } else {
-            verifyError = result.message || "Payment verification failed";
-            paymentStatus = "failed";
-          }
-        } catch (err) {
-          verifyError = err instanceof Error ? err.message : "Failed to verify payment";
-          paymentStatus = "failed";
-        }
+        verifyPayment(response.reference);
       },
-      onClose: () => {
+      onClose: function () {
         if (paymentStatus === "processing") {
           paymentStatus = "cancelled";
         }
