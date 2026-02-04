@@ -45,6 +45,14 @@
     goto(`/ecoLeasing/${$page.params.slug}/inspect?mode=${mode}`);
   }
 
+  function handleRentEquipment() {
+    goto(`/ecoLeasing/${$page.params.slug}/rent?mode=${mode}`);
+  }
+
+  // Button visibility based on equipment listingType
+  $: showInspectButton = equipment?.listingType === 'sale' || equipment?.listingType === 'both';
+  $: showRentButton = equipment?.listingType === 'lease' || equipment?.listingType === 'both';
+
   function formatCurrency(amount: number | undefined): string {
     if (!amount && amount !== 0) return "";
     return new Intl.NumberFormat("en-NG", {
@@ -153,31 +161,20 @@
 
               <!-- ACTION BUTTONS (MOBILE) -->
               <div class="ml-auto flex gap-3">
-                {#if isSale}
+                {#if showInspectButton}
                   <button
                     onclick={handleBookInspection}
                     class="px-5 py-2 text-xs md:text-sm rounded-full bg-primary text-white shadow"
                   >
                     Book Inspection
                   </button>
-                {:else if isLease}
+                {/if}
+                {#if showRentButton}
                   <button
+                    onclick={handleRentEquipment}
                     class="px-5 py-2 text-xs md:text-sm rounded-full border border-primary text-primary shadow"
                   >
-                    Rent
-                  </button>
-                {:else}
-                  <button
-                    onclick={handleBookInspection}
-                    class="px-5 py-2 text-xs md:text-sm rounded-full bg-primary text-white shadow"
-                  >
-                    Book Inspection
-                  </button>
-
-                  <button
-                    class="px-5 py-2 text-xs md:text-sm rounded-full border border-primary text-primary shadow"
-                  >
-                    Rent
+                    Rent Equipment
                   </button>
                 {/if}
               </div>
@@ -234,31 +231,20 @@
 
               <!-- ACTION BUTTONS (DESKTOP) -->
               <div class="ml-auto flex gap-3">
-                {#if isSale}
+                {#if showInspectButton}
                   <button
                     onclick={handleBookInspection}
                     class="px-5 py-2 text-sm rounded-full bg-primary text-white shadow"
                   >
                     Book Inspection
                   </button>
-                {:else if isLease}
+                {/if}
+                {#if showRentButton}
                   <button
+                    onclick={handleRentEquipment}
                     class="px-5 py-2 text-sm rounded-full border border-primary text-primary shadow"
                   >
-                    Rent
-                  </button>
-                {:else}
-                  <button
-                    onclick={handleBookInspection}
-                    class="px-5 py-2 text-sm rounded-full bg-primary text-white shadow"
-                  >
-                    Book Inspection
-                  </button>
-
-                  <button
-                    class="px-5 py-2 text-sm rounded-full border border-primary text-primary shadow"
-                  >
-                    Rent
+                    Rent Equipment
                   </button>
                 {/if}
               </div>

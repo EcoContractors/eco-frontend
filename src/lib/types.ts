@@ -166,6 +166,60 @@ export interface SubmitLeadResponse {
 	lead: ChatLead;
 }
 
+// Lease/Rental types
+export interface LeaseRequest {
+	equipmentId: string;
+	companyName: string;
+	contactName: string;
+	contactEmail: string;
+	contactPhone: string;
+	jobScope: string;
+	location: string;
+	startDate: string;
+	endDate: string;
+}
+
+export interface LeaseBooking {
+	id: string;
+	bookingNumber: string;
+	totalAmount: number;
+	equipment: {
+		id: string;
+		name: string;
+		model?: string;
+		dailyRate: number;
+		imageUrl?: string | null;
+	};
+	startDate: string;
+	endDate: string;
+	durationDays: number;
+	contactName?: string;
+	contactEmail?: string;
+	contactPhone?: string;
+	location?: string;
+	companyName?: string;
+	jobScope?: string;
+	paymentStatus?: string;
+	bookingStatus?: string;
+	paystackReference?: string;
+	createdAt?: string;
+}
+
+export interface LeaseResponse {
+	booking: LeaseBooking;
+}
+
+export interface VerifyPaymentRequest {
+	reference: string;
+	paystackReference: string;
+}
+
+export interface VerifyPaymentResponse {
+	success: boolean;
+	booking: LeaseBooking;
+	message: string;
+}
+
 // General API response for simple messages
 export interface ApiResponse {
 	message: string;

@@ -107,6 +107,11 @@ import type {
 	Equipment,
 	BookInspectionRequest,
 	BookInspectionResponse,
+	LeaseRequest,
+	LeaseResponse,
+	VerifyPaymentRequest,
+	VerifyPaymentResponse,
+	LeaseBooking,
 	CreateSessionResponse,
 	SendMessageResponse,
 	GetMessagesResponse,
@@ -124,6 +129,17 @@ export const equipmentApi = {
 export const appointmentApi = {
 	book: (data: BookInspectionRequest) =>
 		api.post<BookInspectionResponse>('/appointments', data)
+};
+
+export const leaseApi = {
+	create: (data: LeaseRequest) =>
+		api.post<LeaseResponse>('/leases', data),
+
+	verify: (data: VerifyPaymentRequest) =>
+		api.post<VerifyPaymentResponse>('/leases/verify', data),
+
+	getBooking: (bookingNumber: string) =>
+		api.get<{ booking: LeaseBooking }>(`/leases/${bookingNumber}`)
 };
 
 export const chatApi = {
