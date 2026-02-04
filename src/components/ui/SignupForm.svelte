@@ -6,6 +6,7 @@
 	import { enhance } from '$app/forms';
 	import { agentApi } from '$lib/api/client';
   import { ArrowLeft } from 'lucide-svelte';
+	import { goto } from '$app/navigation';
 
 	interface Props {
 		onClose?: () => void;
@@ -30,6 +31,14 @@
 			}).catch(console.error);
 		}
 	});
+
+	function handleBack() {
+		if (typeof window !== 'undefined' && window.history.length > 1) {
+			window.history.back();
+		} else {
+			goto('/signin');
+		}
+	}
 </script>
 
 <section class="p-8 max-w-7xl mx-auto mt-14">
