@@ -5,6 +5,7 @@
 	import { page } from '$app/stores';
 	import { enhance } from '$app/forms';
   import { ArrowLeft } from 'lucide-svelte';
+	import { goto } from '$app/navigation';
 
 	let showPassword = $state(false);
 	let isLoading = $state(false);
@@ -83,18 +84,25 @@
 					<Button label={isLoading ? 'Signing in...' : 'Sign in'} type="submit" width="200px" disabled={isLoading} />
 				</div>
 
-				<p class="text-xs text-center text-gray-400 mt-3 cursor-pointer">
-					<a href="/forgot-password" class="hover:text-primary">Forgot Password ?</a>
+				<p class="text-xs text-center text-gray-400 mt-3">
+					<button
+						type="button"
+						class="hover:text-primary"
+						onclick={() => goto('/forgot-password')}
+					>
+						Forgot Password ?
+					</button>
 				</p>
 
 				<div class="mt-8 text-center text-xs text-gray-400">Don't have an account ?</div>
 
-				<a
-					href="/signup"
+				<button
+					type="button"
 					class="block w-full md:w-xs text-center py-3 rounded-full text-sm font-medium bg-white border border-green-500 text-green-600 hover:bg-green-50 transition shadow-md mt-5 mx-auto"
+					onclick={() => goto('/signup')}
 				>
 					Create an account
-				</a>
+				</button>
 
 				<div class="mt-4 flex items-center justify-center gap-2 text-xs text-gray-500">
 					<span><img src={google} alt="" /></span>
