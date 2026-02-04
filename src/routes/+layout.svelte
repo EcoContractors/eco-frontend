@@ -3,6 +3,7 @@
 	import { fly, fade } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 	import Header from '../components/landing/Header.svelte';
+	import Footer from '../components/landing/Footer.svelte';
 	import Toast from '../components/ui/Toast/Toast.svelte';
 	import ChatWidget from '../components/chat/ChatWidget.svelte';
 	import type { LayoutData } from './$types';
@@ -19,5 +20,6 @@
 		{@render children()}
 	</div>
 
+	<Footer />
 	<Toast />
 	<ChatWidget />

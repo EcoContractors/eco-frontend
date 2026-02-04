@@ -6,29 +6,29 @@
   const company = [
     { label: "About Us", href: "/about" },
     { label: "Our Services", href: "/services" },
-    { label: "Projects", href: "/projects" },
-    { label: "Careers", href: "/careers" },
+    { label: "Eco Leasing", href: "/ecoLeasing" },
+    { label: "Help & Support", href: "/help" },
   ];
 
   const support = [
     { label: "Help Center", href: "/help" },
-    { label: "Contact Us", href: "/help" },
-    { label: "FAQ", href: "/help" },
-    { label: "Terms of Service", href: "#" },
+    { label: "Contact Us", href: "/help#contact" },
+    { label: "FAQ", href: "/help#faq" },
+    { label: "Terms of Service", href: "/help#policies" },
   ];
 
   const resources = [
-    { label: "Privacy Policy", href: "#" },
-    { label: "Cookie Policy", href: "#" },
-    { label: "Sitemap", href: "#" },
-    { label: "Data Protection", href: "#" },
+    { label: "Privacy Policy", href: "/help#policies" },
+    { label: "Cookie Policy", href: "/help#policies" },
+    { label: "Sitemap", href: "/help#sitemap" },
+    { label: "Data Protection", href: "/help#policies" },
   ];
 
   const socials = [
-    { icon: Facebook, href: "#" },
-    { icon: Linkedin, href: "#" },
-    { icon: Twitter, href: "#" },
-    { icon: Youtube, href: "#" },
+    { icon: Facebook, href: "https://www.facebook.com" },
+    { icon: Linkedin, href: "https://www.linkedin.com" },
+    { icon: Twitter, href: "https://x.com" },
+    { icon: Youtube, href: "https://www.youtube.com" },
   ];
 </script>
 
@@ -77,7 +77,7 @@
           Victoria Island,<br />
           Lagos, Nigeria
         </p>
-        <a href="#" class="flex items-center gap-1 text-primary text-xs mt-3 hover:underline">
+        <a href="/help#location" class="flex items-center gap-1 text-primary text-xs mt-3 hover:underline">
           <MapPin size={12} />
           Branch Location
         </a>
@@ -124,14 +124,15 @@
     <!-- Bottom Copyright Bar -->
     <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6">
       <p class="text-white/50 text-xs">
-        © 2026 Eco Contractors Limited. All rights reserved.
+        (c) 2026 Eco Contractors Limited. All rights reserved.
       </p>
       <div class="flex flex-wrap justify-center sm:justify-end gap-4">
-        <a href="#" class="text-white/50 text-xs hover:text-primary transition">Terms of Use</a>
-        <a href="#" class="text-white/50 text-xs hover:text-primary transition">Privacy Policy</a>
-        <a href="#" class="text-white/50 text-xs hover:text-primary transition">Cookie Policy</a>
+        <a href="/help#policies" class="text-white/50 text-xs hover:text-primary transition">Terms of Use</a>
+        <a href="/help#policies" class="text-white/50 text-xs hover:text-primary transition">Privacy Policy</a>
+        <a href="/help#policies" class="text-white/50 text-xs hover:text-primary transition">Cookie Policy</a>
       </div>
     </div>
 
   </div>
 </footer>
+
