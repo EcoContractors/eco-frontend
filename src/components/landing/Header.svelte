@@ -28,9 +28,12 @@
 		form.submit();
 	}
 
+<<<<<<< HEAD
 	function handleLogin() {
 		goto('/signin');
 	}
+=======
+>>>>>>> 00909ae14be6882887ec6586b70d3e8fefb4ae8d
 </script>
 
 <header class="fixed top-0 z-50 flex items-center px-4 py-3 bg-white shadow-md w-full">
@@ -54,6 +57,7 @@
 			>
 				Logout
 			</button>
+<<<<<<< HEAD
 		{:else}
 			<button
 				type="button"
@@ -62,6 +66,8 @@
 			>
 				Login
 			</button>
+=======
+>>>>>>> 00909ae14be6882887ec6586b70d3e8fefb4ae8d
 		{/if}
 
 		<!-- Menu icon -->

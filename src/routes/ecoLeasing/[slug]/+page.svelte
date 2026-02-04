@@ -1,12 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
-
+  import SidebarHeader from "../../../components/sidebar/SidebarHeader.svelte";
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
   import { equipmentApi } from "$lib/api/client";
   import type { Equipment } from "$lib/types";
 
-
+  export let onClose: (() => void) | undefined;
 
   let equipment: Equipment | null = null;
   let loading = true;
@@ -45,10 +45,13 @@
     goto(`/ecoLeasing/${$page.params.slug}/inspect?mode=${mode}`);
   }
 
-  function handleRent() {
-    const ref = $page.url.searchParams.get("ref");
-    goto(`/ecoLeasing/${$page.params.slug}/lease?mode=${mode}${ref ? `&ref=${ref}` : ""}`);
+  function handleRentEquipment() {
+    goto(`/ecoLeasing/${$page.params.slug}/rent?mode=${mode}`);
   }
+
+  // Button visibility based on equipment listingType
+  $: showInspectButton = equipment?.listingType === 'sale' || equipment?.listingType === 'both';
+  $: showRentButton = equipment?.listingType === 'lease' || equipment?.listingType === 'both';
 
   function formatCurrency(amount: number | undefined): string {
     if (!amount && amount !== 0) return "";
@@ -73,7 +76,7 @@
 <section class="min-h-screen bg-tertiary p-4 md:px-30 mt-14">
   <div class="flex items-center justify-between">
     <h1 class="text-lg md:text-2xl font-semibold mb-4 px-4">Equipment</h1>
-    
+    <SidebarHeader {onClose}/>
   </div>
 
   {#if loading}
@@ -158,33 +161,20 @@
 
               <!-- ACTION BUTTONS (MOBILE) -->
               <div class="ml-auto flex gap-3">
-                {#if isSale}
+                {#if showInspectButton}
                   <button
                     onclick={handleBookInspection}
                     class="px-5 py-2 text-xs md:text-sm rounded-full bg-primary text-white shadow"
                   >
                     Book Inspection
                   </button>
-                {:else if isLease}
+                {/if}
+                {#if showRentButton}
                   <button
-                    onclick={handleRent}
+                    onclick={handleRentEquipment}
                     class="px-5 py-2 text-xs md:text-sm rounded-full border border-primary text-primary shadow"
                   >
-                    Rent
-                  </button>
-                {:else}
-                  <button
-                    onclick={handleBookInspection}
-                    class="px-5 py-2 text-xs md:text-sm rounded-full bg-primary text-white shadow"
-                  >
-                    Book Inspection
-                  </button>
-
-                  <button
-                    onclick={handleRent}
-                    class="px-5 py-2 text-xs md:text-sm rounded-full border border-primary text-primary shadow"
-                  >
-                    Rent
+                    Rent Equipment
                   </button>
                 {/if}
               </div>
@@ -241,33 +231,20 @@
 
               <!-- ACTION BUTTONS (DESKTOP) -->
               <div class="ml-auto flex gap-3">
-                {#if isSale}
+                {#if showInspectButton}
                   <button
                     onclick={handleBookInspection}
                     class="px-5 py-2 text-sm rounded-full bg-primary text-white shadow"
                   >
                     Book Inspection
                   </button>
-                {:else if isLease}
+                {/if}
+                {#if showRentButton}
                   <button
-                    onclick={handleRent}
+                    onclick={handleRentEquipment}
                     class="px-5 py-2 text-sm rounded-full border border-primary text-primary shadow"
                   >
-                    Rent
-                  </button>
-                {:else}
-                  <button
-                    onclick={handleBookInspection}
-                    class="px-5 py-2 text-sm rounded-full bg-primary text-white shadow"
-                  >
-                    Book Inspection
-                  </button>
-
-                  <button
-                    onclick={handleRent}
-                    class="px-5 py-2 text-sm rounded-full border border-primary text-primary shadow"
-                  >
-                    Rent
+                    Rent Equipment
                   </button>
                 {/if}
               </div>
@@ -281,6 +258,7 @@
                 <button
                   type="button"
                   onclick={() => scrollThumbnails("left")}
+                  aria-label="Scroll thumbnails left"
                   class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white shadow rounded-full p-1 hidden md:flex items-center justify-center"
                 >
                   <svg class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -290,6 +268,7 @@
                 <button
                   type="button"
                   onclick={() => scrollThumbnails("right")}
+                  aria-label="Scroll thumbnails right"
                   class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white shadow rounded-full p-1 hidden md:flex items-center justify-center"
                 >
                   <svg class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -307,6 +286,7 @@
                   <button
                     type="button"
                     onclick={() => (activeImage = media.url)}
+                    aria-label={`View ${equipment?.name ?? "equipment"} image`}
                     class="flex-shrink-0 snap-center p-2 rounded-lg border transition
                       {media.url === activeImage
                         ? 'border-primary ring-2 ring-primary'

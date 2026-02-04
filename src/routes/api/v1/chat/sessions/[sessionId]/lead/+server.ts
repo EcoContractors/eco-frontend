@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 import { API_BASE_URL } from '$env/static/private';
+=======
+import { env } from '$env/dynamic/private';
+
+const API_BASE_URL = env.API_BASE_URL ?? 'http://localhost:5000';
+>>>>>>> 00909ae14be6882887ec6586b70d3e8fefb4ae8d
 
 export async function POST({ request, params }: { request: Request; params: { sessionId: string } }) {
 	const { sessionId } = await params;
