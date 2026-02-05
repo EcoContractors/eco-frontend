@@ -118,55 +118,6 @@ export interface BookInspectionResponse {
 	};
 }
 
-<<<<<<< HEAD
-// Lease types
-export interface NatureOfJobOption {
-	id: string;
-	label: string;
-	multiplier: number | null;
-	requiresAdminQuote: boolean;
-}
-
-export interface LeaseFormPayload {
-	companyName: string;
-	repName: string;
-	email: string;
-	phone: string;
-	natureOfJob: string;
-	startDate: string;
-	endDate: string;
-	location: string;
-	equipmentId: string;
-	referralCode?: string;
-}
-
-export interface LeaseSubmitResponse {
-	success: boolean;
-	requiresAdminQuote: boolean;
-	quoteId?: string;
-	bookingId?: string;
-	quoteNumber?: string;
-	bookingNumber?: string;
-	totalAmount?: number;
-	leaseAmount?: number;
-	lowbedAmount?: number;
-	paymentUrl?: string;
-	message: string;
-}
-
-export interface LeasePaymentInfo {
-	bookingId: string;
-	bookingNumber: string;
-	quoteNumber?: string;
-	equipment: { id: string; name: string; slug: string };
-	totalAmount: number;
-	lowbedAmount: number;
-	leaseAmount: number;
-	paymentStatus: string;
-}
-
-=======
->>>>>>> 00909ae14be6882887ec6586b70d3e8fefb4ae8d
 // Chat types
 export interface ChatMessage {
 	id: string;
@@ -215,8 +166,6 @@ export interface SubmitLeadResponse {
 	lead: ChatLead;
 }
 
-<<<<<<< HEAD
-=======
 // Lease/Rental types
 export interface LeaseRequest {
 	equipmentId: string;
@@ -271,7 +220,6 @@ export interface VerifyPaymentResponse {
 	message: string;
 }
 
->>>>>>> 00909ae14be6882887ec6586b70d3e8fefb4ae8d
 // General API response for simple messages
 export interface ApiResponse {
 	message: string;

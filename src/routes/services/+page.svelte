@@ -1,21 +1,12 @@
 <script lang="ts">
-<<<<<<< HEAD
-  import Services from "../../components/services/Services.svelte";
-
-
-</script>
-
-<section>
-    <Services />
-</section>
-=======
 	import { servicesCarouselData } from '$lib/data/servicesCarousel';
   import Carousel from '../../components/services/Carousel.svelte';
   import { services } from '$lib/data/services';
   import ServiceDetailCard from '../../components/services/ServiceDetailCard.svelte';
+  import Testimonials from '../../components/services/Testimonials.svelte';
 </script>
 
-<div class="md:py-16 overflow-x-hidden">
+<div class="md:py-14 overflow-x-hidden">
 	<Carousel slides={servicesCarouselData} autoplay={true} interval={4000} />
 </div>
 <div class="container mx-auto px-4 py-16">
@@ -34,5 +25,5 @@
 			<ServiceDetailCard {service} />
 		{/each}
 	</div>
+	<Testimonials />
 </div>
->>>>>>> 00909ae14be6882887ec6586b70d3e8fefb4ae8d

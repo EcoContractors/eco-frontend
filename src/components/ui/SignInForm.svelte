@@ -1,24 +1,37 @@
 <script lang="ts">
 	import { google, staff } from '$lib/assets/images';
-<<<<<<< HEAD
-	import SidebarHeader from '../sidebar/SidebarHeader.svelte';
-	import Button from '../ui/Button.svelte';
-	import { page } from '$app/stores';
-	import { enhance } from '$app/forms';
-=======
 	
 	import Button from '../ui/Button.svelte';
 	import { page } from '$app/stores';
 	import { enhance } from '$app/forms';
   import { ArrowLeft } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
->>>>>>> 00909ae14be6882887ec6586b70d3e8fefb4ae8d
 
 	let showPassword = $state(false);
 	let isLoading = $state(false);
+
+	function handleBack() {
+		if (typeof window !== 'undefined' && window.history.length > 1) {
+			window.history.back();
+		} else {
+			goto('/');
+		}
+	}
 </script>
 
-<section class="mt-14 max-w-7xl">
+<section class="mt-14 w-full relative">
+	
+	<div class="absolute top-4 right-4 lg:top-10 lg:right-10 z-10">
+		<button
+			type="button"
+			aria-label="Go back"
+			class="p-2 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
+			onclick={handleBack}
+		>
+			<ArrowLeft size={24} class="text-gray-700" />
+		</button>
+	</div>
+
 	<div class="p-6 lg:p-10 flex flex-col lg:flex-row lg:gap-24">
 		<div class="font-semibold text-xl md:text-2xl pb-10 space-y-5">
 			<h1 class="w-20">
@@ -91,10 +104,6 @@
 					<Button label={isLoading ? 'Signing in...' : 'Sign in'} type="submit" width="200px" disabled={isLoading} />
 				</div>
 
-<<<<<<< HEAD
-				<p class="text-xs text-center text-gray-400 mt-3 cursor-pointer">
-					<a href="/forgot-password" class="hover:text-primary">Forgot Password ?</a>
-=======
 				<p class="text-xs text-center text-gray-400 mt-3">
 					<button
 						type="button"
@@ -103,19 +112,10 @@
 					>
 						Forgot Password ?
 					</button>
->>>>>>> 00909ae14be6882887ec6586b70d3e8fefb4ae8d
 				</p>
 
 				<div class="mt-8 text-center text-xs text-gray-400">Don't have an account ?</div>
 
-<<<<<<< HEAD
-				<a
-					href="/signup"
-					class="block w-full md:w-xs text-center py-3 rounded-full text-sm font-medium bg-white border border-green-500 text-green-600 hover:bg-green-50 transition shadow-md mt-5 mx-auto"
-				>
-					Create an account
-				</a>
-=======
 				<button
 					type="button"
 					class="block w-full md:w-xs text-center py-3 rounded-full text-sm font-medium bg-white border border-green-500 text-green-600 hover:bg-green-50 transition shadow-md mt-5 mx-auto"
@@ -123,20 +123,12 @@
 				>
 					Create an account
 				</button>
->>>>>>> 00909ae14be6882887ec6586b70d3e8fefb4ae8d
 
 				<div class="mt-4 flex items-center justify-center gap-2 text-xs text-gray-500">
 					<span><img src={google} alt="" /></span>
 					<span>Sign in with Google</span>
 				</div>
 			</form>
-		</div>
-		<div class="order-first lg:order-0">
-<<<<<<< HEAD
-			<SidebarHeader />
-=======
-			<ArrowLeft />
->>>>>>> 00909ae14be6882887ec6586b70d3e8fefb4ae8d
 		</div>
 	</div>
 </section>

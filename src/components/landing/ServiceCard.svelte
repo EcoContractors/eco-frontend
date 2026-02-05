@@ -7,25 +7,16 @@
 		title: string;
 		description: string;
 		onAction?: () => void;
-<<<<<<< HEAD
-	}
-
-	let { image, title, description, onAction }: Props = $props();
-=======
 		route?: string; // Add optional route prop
 	}
 
 	let { image, title, description, onAction, route }: Props = $props();
->>>>>>> 00909ae14be6882887ec6586b70d3e8fefb4ae8d
 
 	function handleAction() {
 		if (onAction) {
 			onAction();
-<<<<<<< HEAD
-=======
 		} else if (route) {
 			goto(route);
->>>>>>> 00909ae14be6882887ec6586b70d3e8fefb4ae8d
 		} else {
 			goto('/services');
 		}
@@ -52,8 +43,4 @@
 			<Button label="See more" onClick={handleAction} />
 		</div>
 	</div>
-<<<<<<< HEAD
 </div>
-=======
-</div>
->>>>>>> 00909ae14be6882887ec6586b70d3e8fefb4ae8d

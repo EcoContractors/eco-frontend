@@ -68,7 +68,7 @@
 	<!-- Next Button -->
 	<button
 		type="button"
-		class="absolute top-1/2 right-2 sm:right-8 -translate-y-1/2 bg-white/80 hover:bg-white p-1.5 sm:p-2 rounded-full shadow-lg transition-all"
+		class="absolute top-1/2 right-6 sm:right-8 -translate-y-1/2 bg-white/80 hover:bg-white p-1.5 sm:p-2 rounded-full shadow-lg transition-all"
 		onclick={nextSlide}
 		aria-label="Next slide"
 	>

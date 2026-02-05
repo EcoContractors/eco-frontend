@@ -1,5 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { goto } from "$app/navigation";
+  import { ArrowLeft } from "lucide-svelte";
   import EquipmentCard from "./EquipmentCard.svelte";
   import { equipmentApi } from "$lib/api/client";
   import type { Equipment } from "$lib/types";
@@ -32,6 +34,10 @@
     }
   }
 
+  function handleBack() {
+    goto('/');
+  }
+
   $: filteredEquipment = equipment.filter((item) => {
     // Tab filter
     if (activeTab === "sale" && item.listingType !== "sale" && item.listingType !== "both") return false;
@@ -51,7 +57,19 @@
   });
 </script>
 
-<section class="p-6 mt-14">
+<section class="p-6 mt-14 relative">
+  <!-- Back Button - Fixed to top right -->
+  <div class="absolute top-4 right-4 md:right-8 lg:right-10 z-10">
+    <button
+      type="button"
+      aria-label="Go to home page"
+      class="p-2 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
+      on:click={handleBack}
+    >
+      <ArrowLeft size={24} class="text-gray-700" />
+    </button>
+  </div>
+
   <div class="text-3xl font-semibold">
     <h1>Eco Leasing/ <span class="block text-primary">Sale</span></h1>
   </div>

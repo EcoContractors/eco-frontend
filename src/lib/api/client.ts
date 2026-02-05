@@ -107,16 +107,6 @@ import type {
 	Equipment,
 	BookInspectionRequest,
 	BookInspectionResponse,
-<<<<<<< HEAD
-	CreateSessionResponse,
-	SendMessageResponse,
-	GetMessagesResponse,
-	SubmitLeadResponse,
-	LeaseFormPayload,
-	LeaseSubmitResponse,
-	LeasePaymentInfo,
-	NatureOfJobOption
-=======
 	LeaseRequest,
 	LeaseResponse,
 	VerifyPaymentRequest,
@@ -126,7 +116,6 @@ import type {
 	SendMessageResponse,
 	GetMessagesResponse,
 	SubmitLeadResponse
->>>>>>> 00909ae14be6882887ec6586b70d3e8fefb4ae8d
 } from '$lib/types';
 
 export const equipmentApi = {
@@ -143,22 +132,6 @@ export const appointmentApi = {
 };
 
 export const leaseApi = {
-<<<<<<< HEAD
-	submitForm: (data: LeaseFormPayload) =>
-		api.post<LeaseSubmitResponse>('/lease/submit', data),
-
-	getNatureOptions: () =>
-		api.get<{ options: NatureOfJobOption[] }>('/lease/nature-options'),
-
-	getBookingPaymentInfo: (bookingId: string) =>
-		api.get<LeasePaymentInfo>(`/lease/booking/${bookingId}/payment-info`),
-
-	initiatePayment: (bookingId: string, paymentType: 'full' | 'half') =>
-		api.post<{ authorizationUrl: string; reference: string }>('/lease/initiate-payment', {
-			bookingId,
-			paymentType
-		})
-=======
 	create: (data: LeaseRequest) =>
 		api.post<LeaseResponse>('/leases', data),
 
@@ -167,7 +140,6 @@ export const leaseApi = {
 
 	getBooking: (bookingNumber: string) =>
 		api.get<{ booking: LeaseBooking }>(`/leases/${bookingNumber}`)
->>>>>>> 00909ae14be6882887ec6586b70d3e8fefb4ae8d
 };
 
 export const chatApi = {

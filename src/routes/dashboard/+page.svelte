@@ -5,4 +5,9 @@
 	let { data }: { data: PageData } = $props();
 </script>
 
-<Dashboard user={data.user} />
+<Dashboard 
+	user={data.user} 
+	stats={data.stats} 
+	clients={data.clients}
+	error={data.error} 
+/>

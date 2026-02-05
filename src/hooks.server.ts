@@ -1,13 +1,9 @@
 import type { Handle } from '@sveltejs/kit';
-<<<<<<< HEAD
-import { API_BASE_URL } from '$env/static/private';
-=======
 import { env } from '$env/dynamic/private';
 
 const API_BASE_URL = env.API_BASE_URL ?? 'http://localhost:5000';
->>>>>>> 00909ae14be6882887ec6586b70d3e8fefb4ae8d
 
-async function loadAgentStatus(token: string): Promise<string | undefined> {
+async function loadAgentProfile(token: string) {
 	try {
 		const response = await fetch(`${API_BASE_URL}/api/v1/agents/profile`, {
 			headers: {
@@ -16,14 +12,13 @@ async function loadAgentStatus(token: string): Promise<string | undefined> {
 			}
 		});
 
-		if (!response.ok) return undefined;
+		if (!response.ok) return null;
 
-		const data = await response.json().catch(() => null as unknown);
-		const status = (data as any)?.agent?.status;
-		return typeof status === 'string' ? status : undefined;
+		const data = await response.json().catch(() => null);
+		return data?.agent || null;
 	} catch (error) {
-		console.error('Error loading agent status in hooks.server:', error);
-		return undefined;
+		console.error('Error loading agent profile in hooks.server:', error);
+		return null;
 	}
 }
 
@@ -67,24 +62,29 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 						// Decode new token for user info
 						const newPayload = JSON.parse(atob(newAccessToken.split('.')[1]));
+
+						// Fetch agent profile to get full name
+						const agentProfile = await loadAgentProfile(newAccessToken);
+
+						// Split fullName into firstName and lastName
+						let firstName = '';
+						let lastName = '';
+						if (agentProfile?.fullName) {
+							const nameParts = agentProfile.fullName.trim().split(' ');
+							firstName = nameParts[0] || '';
+							lastName = nameParts.slice(1).join(' ') || '';
+						}
+
 						event.locals.user = {
 							id: newPayload.userId,
 							email: newPayload.email,
 							role: newPayload.role,
-							firstName: newPayload.firstName || '',
-							lastName: newPayload.lastName || '',
+							firstName: firstName,
+							lastName: lastName,
 							isActive: true,
 							isVerified: true,
-							agentStatus: undefined // Initialize agentStatus
+							agentStatus: agentProfile?.status
 						};
-
-						// If user is an agent, fetch their current agent status from the backend
-						if (event.locals.user.role === 'agent') {
-							const status = await loadAgentStatus(newAccessToken);
-							if (status) {
-								event.locals.user.agentStatus = status as any;
-							}
-						}
 
 						event.locals.accessToken = newAccessToken;
 					}
@@ -94,24 +94,28 @@ export const handle: Handle = async ({ event, resolve }) => {
 					event.cookies.delete('refreshToken', { path: '/' });
 				}
 			} else if (!isExpired) {
-				// Token is valid
-					event.locals.user = {
+				// Token is valid - fetch agent profile
+				const agentProfile = await loadAgentProfile(accessToken);
+
+				// Split fullName into firstName and lastName
+				let firstName = '';
+				let lastName = '';
+				if (agentProfile?.fullName) {
+					const nameParts = agentProfile.fullName.trim().split(' ');
+					firstName = nameParts[0] || '';
+					lastName = nameParts.slice(1).join(' ') || '';
+				}
+
+				event.locals.user = {
 					id: payload.userId,
 					email: payload.email,
 					role: payload.role,
-					firstName: payload.firstName || '',
-					lastName: payload.lastName || '',
+					firstName: firstName,
+					lastName: lastName,
 					isActive: true,
 					isVerified: true,
-					agentStatus: undefined // Initialize agentStatus
+					agentStatus: agentProfile?.status
 				};
-
-				if (event.locals.user.role === 'agent') {
-					const status = await loadAgentStatus(accessToken);
-					if (status) {
-						event.locals.user.agentStatus = status as any;
-					}
-				}
 
 				event.locals.accessToken = accessToken;
 			}

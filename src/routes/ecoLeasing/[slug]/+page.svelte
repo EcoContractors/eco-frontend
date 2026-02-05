@@ -1,12 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import SidebarHeader from "../../../components/sidebar/SidebarHeader.svelte";
+ 
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
   import { equipmentApi } from "$lib/api/client";
   import type { Equipment } from "$lib/types";
+  import { ArrowLeft } from "lucide-svelte";
 
-  export let onClose: (() => void) | undefined;
 
   let equipment: Equipment | null = null;
   let loading = true;
@@ -33,6 +33,18 @@
       error = err instanceof Error ? err.message : "Failed to load equipment";
     } finally {
       loading = false;
+    }
+  }
+
+   function handleBack() {
+    
+    const currentPath = $page.url.pathname;
+    if (currentPath.includes('/inspect') || currentPath.includes('/rent')) {
+     
+      window.history.back();
+    } else {
+      
+      goto('/ecoLeasing');
     }
   }
 
@@ -73,10 +85,21 @@
   }
 </script>
 
-<section class="min-h-screen bg-tertiary p-4 md:px-30 mt-14">
-  <div class="flex items-center justify-between">
+<section class="min-h-screen bg-tertiary p-4 md:px-30 mt-14 relative">
+  <!-- Back Button - Fixed to top right -->
+  <div class="absolute top-4 right-4 md:right-8 lg:right-10 z-10">
+    <button
+      type="button"
+      aria-label="Go back"
+      class="p-2 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
+      onclick={handleBack}
+    >
+      <ArrowLeft size={24} class="text-gray-700" />
+    </button>
+  </div>
+
+  <div class="flex items-center">
     <h1 class="text-lg md:text-2xl font-semibold mb-4 px-4">Equipment</h1>
-    <SidebarHeader {onClose}/>
   </div>
 
   {#if loading}
@@ -309,7 +332,7 @@
 </section>
 
 <style>
-  /* Hide scrollbar for webkit browsers */
+ 
   div::-webkit-scrollbar {
     display: none;
   }
