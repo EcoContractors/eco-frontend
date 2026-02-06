@@ -1,7 +1,9 @@
 <script lang="ts">
-	import { Copy, Check, Upload, TrendingUp, Users, Star, DollarSign } from 'lucide-svelte';
+	import { Copy, Check, Upload, TrendingUp, Users, Star, LogOut } from 'lucide-svelte';
 	import type { User } from '$lib/types';
 	import { AgentStatus } from '$lib/types';
+	import { invalidateAll } from '$app/navigation';
+	import { onMount, onDestroy } from 'svelte';
 	import ClientsTable from './ClientsTable.svelte'
 
 	interface Props {
@@ -118,6 +120,36 @@
 		};
 		reader.readAsDataURL(file);
 	}
+
+	function formatCurrency(amount: number): string {
+		return new Intl.NumberFormat('en-NG', {
+			style: 'currency',
+			currency: 'NGN',
+		}).format(amount);
+	}
+
+	// Auto-refresh dashboard stats every 30 seconds
+	let refreshInterval: ReturnType<typeof setInterval>;
+
+	onMount(() => {
+		refreshInterval = setInterval(() => {
+			invalidateAll();
+		}, 30000);
+	});
+
+	onDestroy(() => {
+		if (refreshInterval) {
+			clearInterval(refreshInterval);
+		}
+	});
+
+	async function handleLogout() {
+		const form = document.createElement('form');
+		form.method = 'POST';
+		form.action = '/logout';
+		document.body.appendChild(form);
+		form.submit();
+	}
 </script>
 
 <div class="min-h-screen pt-10">
@@ -200,6 +232,17 @@
 						{/if}
 					</div>
 				</div>
+
+				<!-- Logout Button -->
+				<button
+					type="button"
+					onclick={handleLogout}
+					class="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors text-sm font-medium"
+					title="Logout"
+				>
+					<LogOut class="w-4 h-4" />
+					<span>Logout</span>
+				</button>
 			</div>
 		</div>
 
@@ -273,12 +316,12 @@
 				>
 					<div class="flex items-center justify-between mb-4">
 						<div class="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
-							<DollarSign class="w-6 h-6 text-white" />
+							<span class="text-xl font-bold text-white">₦</span>
 						</div>
 						<span class="text-xs font-medium bg-white/20 px-2 py-1 rounded">Total</span>
 					</div>
 					<h3 class="text-2xl md:text-3xl font-bold mb-1">
-						${(stats.totalCommissions ?? 0).toLocaleString()}
+						{formatCurrency(stats.totalCommissions ?? 0)}
 					</h3>
 					<p class="text-sm text-white/90">Total Commissions</p>
 				</div>
@@ -290,12 +333,12 @@
 				<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
 					<div class="flex items-center gap-3 mb-3">
 						<div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-							<DollarSign class="w-5 h-5 text-orange-600" />
+							<span class="text-lg font-bold text-orange-600">₦</span>
 						</div>
 						<div>
 							<p class="text-sm text-gray-600">Pending Commissions</p>
 							<h4 class="text-xl font-bold text-gray-900">
-								${(stats.pendingCommissions ?? 0).toLocaleString()}
+								{formatCurrency(stats.pendingCommissions ?? 0)}
 							</h4>
 						</div>
 					</div>
@@ -310,7 +353,7 @@
 						<div>
 							<p class="text-sm text-gray-600">Paid Commissions</p>
 							<h4 class="text-xl font-bold text-gray-900">
-								${(stats.paidCommissions ?? 0).toLocaleString()}
+								{formatCurrency(stats.paidCommissions ?? 0)}
 							</h4>
 						</div>
 					</div>
