@@ -66,6 +66,10 @@ export const actions: Actions = {
 			});
 		}
 
+		// Read the role from the form — defaults to 'agent' unless referral sets it to 'customer'
+		const rawRole = data.get('role') as string;
+		const role = referralCode && rawRole === 'customer' ? 'customer' : 'agent';
+
 		try {
 			const payload: Record<string, unknown> = {
 				firstName,
@@ -73,7 +77,7 @@ export const actions: Actions = {
 				email,
 				password,
 				phone,
-				role: 'agent'
+				role
 			};
 
 			if (referralCode) {
