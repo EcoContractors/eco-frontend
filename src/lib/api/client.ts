@@ -131,9 +131,41 @@ export const appointmentApi = {
 		api.post<BookInspectionResponse>('/appointments', data)
 };
 
+/** Payload for the lease request form (equipment lease flow with optional referral) */
+export interface LeaseSubmitPayload {
+	companyName: string;
+	repName: string;
+	email: string;
+	phone: string;
+	natureOfJob: string;
+	startDate: string;
+	endDate: string;
+	location: string;
+	equipmentId: string;
+	referralCode?: string;
+}
+
+/** Response from lease submit (used by dashboard for activeBookings when backend attributes by referralCode) */
+export interface LeaseSubmitResponse {
+	requiresAdminQuote: boolean;
+	totalAmount?: number;
+	lowbedAmount?: number;
+	leaseAmount?: number;
+	paymentUrl?: string;
+	quoteNumber?: string;
+	bookingNumber?: string;
+	message: string;
+}
+
 export const leaseApi = {
 	create: (data: LeaseRequest) =>
 		api.post<LeaseResponse>('/leases', data),
+
+	submitForm: (data: LeaseSubmitPayload) =>
+		api.post<LeaseSubmitResponse>('/lease/submit', data),
+
+	getNatureOptions: () =>
+		api.get<{ options: { id: string; label: string }[] }>('/lease/nature-options'),
 
 	verify: (data: VerifyPaymentRequest) =>
 		api.post<VerifyPaymentResponse>('/leases/verify', data),

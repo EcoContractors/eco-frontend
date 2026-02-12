@@ -4,8 +4,8 @@
   import { goto } from "$app/navigation";
   import { equipmentApi, leaseApi } from "$lib/api/client";
   import type { Equipment } from "$lib/types";
-  import type { NatureOfJobOption } from "$lib/types";
 
+  type NatureOfJobOption = { id: string; label: string };
   let equipment: Equipment | null = null;
   let natureOptions: NatureOfJobOption[] = [];
   let loading = true;
@@ -43,7 +43,7 @@
     loading = true;
     error = null;
     try {
-      const data = await equipmentApi.getBySlug($page.params.slug);
+      const data = await equipmentApi.getBySlug($page.params.slug ?? '');
       equipment = data.equipment;
     } catch (err) {
       error = err instanceof Error ? err.message : "Failed to load equipment";
@@ -62,7 +62,9 @@
   }
 
   $: mode = $page.url.searchParams.get("mode") ?? "lease";
-  $: agentRef = $page.url.searchParams.get("ref") ?? null;
+  $: agentRef =
+    $page.url.searchParams.get("ref") ??
+    (typeof window !== "undefined" ? localStorage.getItem("agentRef") : null);
   $: todayStr = new Date().toISOString().split("T")[0];
 
   function goBack() {
@@ -154,9 +156,9 @@
           </div>
         {/if}
         <div class="flex flex-col sm:flex-row gap-3 justify-center">
-          {#if !submitResult.requiresAdminQuote && submitResult.paymentUrl}
+          {#if submitResult && !submitResult.requiresAdminQuote && submitResult.paymentUrl}
             <button
-              on:click={() => goto(submitResult.paymentUrl!)}
+              on:click={() => submitResult?.paymentUrl && goto(submitResult.paymentUrl)}
               class="px-6 py-2.5 bg-primary text-white rounded-lg font-medium shadow hover:opacity-90 transition"
             >
               Proceed to Payment

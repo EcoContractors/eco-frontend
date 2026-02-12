@@ -24,7 +24,7 @@
     loading = true;
     error = null;
     try {
-      const data = await equipmentApi.getBySlug($page.params.slug);
+      const data = await equipmentApi.getBySlug($page.params.slug ?? '');
       equipment = data.equipment;
       if (equipment.media && equipment.media.length > 0) {
         activeImage = equipment.media[0].url;
@@ -48,17 +48,23 @@
     }
   }
 
-  // mode from URL
+  // mode and ref from URL (ref preserves agent referral for bookings)
   $: mode = $page.url.searchParams.get("mode") ?? "all";
+  $: refParam = $page.url.searchParams.get("ref") ?? (typeof window !== "undefined" ? localStorage.getItem("agentRef") : null);
+  $: refQuery = refParam ? `&ref=${encodeURIComponent(refParam)}` : "";
   $: isSale = mode === "sale";
   $: isLease = mode === "lease";
 
   function handleBookInspection() {
-    goto(`/ecoLeasing/${$page.params.slug}/inspect?mode=${mode}`);
+    goto(`/ecoLeasing/${$page.params.slug}/inspect?mode=${mode}${refQuery}`);
   }
 
   function handleRentEquipment() {
-    goto(`/ecoLeasing/${$page.params.slug}/rent?mode=${mode}`);
+    goto(`/ecoLeasing/${$page.params.slug}/rent?mode=${mode}${refQuery}`);
+  }
+
+  function handleLeaseRequest() {
+    goto(`/ecoLeasing/${$page.params.slug}/lease?mode=${mode}${refQuery}`);
   }
 
   // Button visibility based on equipment listingType
@@ -199,6 +205,12 @@
                   >
                     Rent Equipment
                   </button>
+                  <button
+                    onclick={handleLeaseRequest}
+                    class="px-5 py-2 text-xs md:text-sm rounded-full bg-primary text-white shadow"
+                  >
+                    Request lease
+                  </button>
                 {/if}
               </div>
             </div>
@@ -268,6 +280,12 @@
                     class="px-5 py-2 text-sm rounded-full border border-primary text-primary shadow"
                   >
                     Rent Equipment
+                  </button>
+                  <button
+                    onclick={handleLeaseRequest}
+                    class="px-5 py-2 text-sm rounded-full bg-primary text-white shadow"
+                  >
+                    Request lease
                   </button>
                 {/if}
               </div>

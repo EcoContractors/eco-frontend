@@ -105,8 +105,8 @@ export const actions: Actions = {
 				referralCode
 			});
 
-			// Redirect to verify page with email for context
-			throw redirect(303, `/verify?email=${encodeURIComponent(email)}&registered=true`);
+			// Redirect to eco leasing with ref so client can book; ref keeps agent attribution for bookings
+			throw redirect(303, `/ecoLeasing?ref=${encodeURIComponent(referralCode)}`);
 		} catch (error) {
 			if (error instanceof ServerApiError) {
 				return fail(error.status, {

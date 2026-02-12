@@ -11,7 +11,7 @@
 	let { data, children }: { data: LayoutData; children: any } = $props();
 </script>
 
-<Header isAuthenticated={data.isAuthenticated} user={data.user} />
+<Header isAuthenticated={data.isAuthenticated} user={data.user} pathname={data.pathname} />
 
 	<div
 		in:fly={{ x: 40, duration: 300, easing: cubicOut }}

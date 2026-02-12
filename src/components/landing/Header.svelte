@@ -8,24 +8,16 @@
 	interface Props {
 		isAuthenticated?: boolean;
 		user?: User | null;
+		pathname?: string;
 	}
 
-	let { isAuthenticated = false, user = null }: Props = $props();
+	let { user = null }: Props = $props();
 
 	let sidebarOpen = $state(false);
 
 	function goHome() {
 		sidebarOpen = false;
 		goto('/');
-	}
-
-	async function handleLogout() {
-		// Use form action for logout (server-side cookie clearing)
-		const form = document.createElement('form');
-		form.method = 'POST';
-		form.action = '/logout';
-		document.body.appendChild(form);
-		form.submit();
 	}
 
 </script>
@@ -42,17 +34,6 @@
 	</button>
 
 	<div class="flex items-center ml-auto order-3 md:order-2">
-		{#if isAuthenticated && user}
-			<span class="mr-4 text-gray-700 font-medium">Hi, {user.firstName}</span>
-			<button
-				type="button"
-				onclick={handleLogout}
-				class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300 mr-2"
-			>
-				Logout
-			</button>
-		{/if}
-
 		<!-- Menu icon -->
 		<button
 			type="button"

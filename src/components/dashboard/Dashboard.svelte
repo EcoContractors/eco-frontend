@@ -1,8 +1,10 @@
 <script lang="ts">
-	import { Copy, Check, Upload, TrendingUp, Users, Star, DollarSign } from 'lucide-svelte';
+	import { onMount } from 'svelte';
+	import { invalidateAll } from '$app/navigation';
+	import { Copy, Check, Upload, TrendingUp, Users, Star, DollarSign, RefreshCw, LogOut } from 'lucide-svelte';
 	import type { User } from '$lib/types';
 	import { AgentStatus } from '$lib/types';
-	import ClientsTable from './ClientsTable.svelte'
+	import ClientsTable from './ClientsTable.svelte';
 
 	interface Props {
 		user?: User | null;
@@ -94,6 +96,28 @@
 	let copied = $state(false);
 	let profileImage = $state<string | null>(null);
 	let fileInput: HTMLInputElement;
+	let refreshing = $state(false);
+
+	// Refetch dashboard data when user returns to this tab (e.g. after using referral link elsewhere)
+	onMount(() => {
+		const handleFocus = () => invalidateAll();
+		window.addEventListener('focus', handleFocus);
+		return () => window.removeEventListener('focus', handleFocus);
+	});
+
+	async function refreshStats() {
+		refreshing = true;
+		await invalidateAll();
+		refreshing = false;
+	}
+
+	function handleLogout() {
+		const form = document.createElement('form');
+		form.method = 'POST';
+		form.action = '/logout';
+		document.body.appendChild(form);
+		form.submit();
+	}
 
 	async function copyToClipboard(text: string) {
 		await navigator.clipboard.writeText(text);
@@ -123,13 +147,37 @@
 <div class="min-h-screen pt-10">
 	<section class="max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
 		<!-- Header Section -->
-		<div class="mb-8">
-			<h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
-				Welcome back, {firstName}! 👋
-			</h1>
-			<p class="text-gray-600 text-sm md:text-base">
-				Here's what's happening with your projects today
-			</p>
+		<div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+			<div>
+				<h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+					Welcome back, {firstName}! 👋
+				</h1>
+				<p class="text-gray-600 text-sm md:text-base">
+					Here's what's happening with your projects today
+				</p>
+			</div>
+			<div class="flex items-center gap-2 shrink-0">
+				{#if isApprovedAgent}
+					<button
+						type="button"
+						class="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white text-gray-700 text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-60"
+						onclick={refreshStats}
+						disabled={refreshing}
+						title="Refresh stats (e.g. after someone uses your referral link)"
+					>
+						<RefreshCw class="w-4 h-4 {refreshing ? 'animate-spin' : ''}" />
+						{refreshing ? 'Refreshing...' : 'Refresh stats'}
+					</button>
+				{/if}
+				<button
+					type="button"
+					onclick={handleLogout}
+					class="flex items-center gap-2 px-4 py-2 rounded-lg border border-primary bg-white text-gray-700 text-sm font-medium hover:bg-primary/5 transition-colors"
+				>
+					<LogOut class="w-4 h-4 text-gray-700" />
+					Logout
+				</button>
+			</div>
 		</div>
 
 		<!-- Profile Card -->
@@ -273,12 +321,12 @@
 				>
 					<div class="flex items-center justify-between mb-4">
 						<div class="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
-							<DollarSign class="w-6 h-6 text-white" />
+							<span class="text-2xl font-bold text-white" aria-hidden="true">₦</span>
 						</div>
 						<span class="text-xs font-medium bg-white/20 px-2 py-1 rounded">Total</span>
 					</div>
 					<h3 class="text-2xl md:text-3xl font-bold mb-1">
-						${(stats.totalCommissions ?? 0).toLocaleString()}
+						₦{(stats.totalCommissions ?? 0).toLocaleString()}
 					</h3>
 					<p class="text-sm text-white/90">Total Commissions</p>
 				</div>
@@ -295,7 +343,7 @@
 						<div>
 							<p class="text-sm text-gray-600">Pending Commissions</p>
 							<h4 class="text-xl font-bold text-gray-900">
-								${(stats.pendingCommissions ?? 0).toLocaleString()}
+								₦{(stats.pendingCommissions ?? 0).toLocaleString()}
 							</h4>
 						</div>
 					</div>
@@ -310,7 +358,7 @@
 						<div>
 							<p class="text-sm text-gray-600">Paid Commissions</p>
 							<h4 class="text-xl font-bold text-gray-900">
-								${(stats.paidCommissions ?? 0).toLocaleString()}
+								₦{(stats.paidCommissions ?? 0).toLocaleString()}
 							</h4>
 						</div>
 					</div>
