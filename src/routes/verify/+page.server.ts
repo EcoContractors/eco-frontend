@@ -11,9 +11,10 @@ export const load: PageServerLoad = async ({ url }) => {
 	// If there's a verification token, process it
 	if (token) {
 		try {
-			await serverApi.post<ApiResponse>('/auth/verify-email', { token });
-			// Redirect to signin with success message
-			redirect(303, '/signin?verified=true');
+			const result = await serverApi.post<ApiResponse & { user?: { role?: string } }>('/auth/verify-email', { token });
+			// Redirect customers to eco leasing page, agents to dashboard
+			const redirectTo = result.user?.role === 'agent' ? '/dashboard' : '/ecoLeasing';
+			redirect(303, `/signin?verified=true&redirectTo=${encodeURIComponent(redirectTo)}`);
 		} catch (error) {
 			// Re-throw SvelteKit redirects
 			if (isRedirect(error)) {

@@ -84,10 +84,10 @@
 			<h1 class="text-3xl font-bold text-green-600 mb-4">Email Verified!</h1>
 			<p class="text-gray-700 text-lg mb-6">{data.message}</p>
 			<button
-				onclick={() => goto('/signin')}
+				onclick={() => goto('/signin?redirectTo=/ecoLeasing')}
 				class="bg-primary text-white font-semibold py-3 px-6 rounded-lg hover:bg-primary-dark transition duration-300"
 			>
-				Go to Sign In
+				Sign In & Browse Equipment
 			</button>
 		{:else}
 			<!-- Verification failed -->

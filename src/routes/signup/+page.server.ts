@@ -3,10 +3,16 @@ import type { Actions, PageServerLoad } from './$types';
 import { serverApi, ServerApiError } from '$lib/server/api';
 import type { RegisterResponse } from '$lib/types';
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ locals, url }) => {
 	// If already authenticated, redirect to dashboard
 	if (locals.user) {
 		throw redirect(303, '/dashboard');
+	}
+
+	// If a referral code is passed as a query param, redirect to the customer signup route
+	const ref = url.searchParams.get('ref');
+	if (ref) {
+		throw redirect(303, `/signup/${encodeURIComponent(ref)}`);
 	}
 
 	return {};
@@ -60,6 +66,10 @@ export const actions: Actions = {
 			});
 		}
 
+		// Read the role from the form — defaults to 'agent' unless referral sets it to 'customer'
+		const rawRole = data.get('role') as string;
+		const role = referralCode && rawRole === 'customer' ? 'customer' : 'agent';
+
 		try {
 			const payload: Record<string, unknown> = {
 				firstName,
@@ -67,7 +77,7 @@ export const actions: Actions = {
 				email,
 				password,
 				phone,
-				role: 'agent'
+				role
 			};
 
 			if (referralCode) {

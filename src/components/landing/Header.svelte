@@ -19,7 +19,6 @@
 		sidebarOpen = false;
 		goto('/');
 	}
-
 </script>
 
 <header class="fixed top-0 z-50 flex items-center px-4 py-3 bg-white shadow-md w-full">
@@ -34,6 +33,9 @@
 	</button>
 
 	<div class="flex items-center ml-auto order-3 md:order-2">
+		{#if isAuthenticated && user}
+			<span class="mr-4 text-gray-700 font-medium">Hi, {user.firstName}</span>
+		{/if}
 		<!-- Menu icon -->
 		<button
 			type="button"

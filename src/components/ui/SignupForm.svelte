@@ -55,8 +55,19 @@
 	</div>
 
 	<div class="text-center mt-6 mb-8">
-		<h1 class="text-3xl font-semibold text-gray-900">Become an Agent</h1>
-		<p class="text-md md:text-2xl text-gray-400 mt-5">Join our network of professional contractors</p>
+		{#if referralCode}
+			<h1 class="text-3xl font-semibold text-gray-900">Create Your Account</h1>
+			{#if referringAgentName}
+				<p class="text-md md:text-xl text-gray-400 mt-5">
+					You've been referred by <span class="text-primary font-medium">{referringAgentName}</span>
+				</p>
+			{:else}
+				<p class="text-md md:text-2xl text-gray-400 mt-5">Sign up to get started</p>
+			{/if}
+		{:else}
+			<h1 class="text-3xl font-semibold text-gray-900">Become an Agent</h1>
+			<p class="text-md md:text-2xl text-gray-400 mt-5">Join our network of professional contractors</p>
+		{/if}
 	</div>
 
 	<form
@@ -79,13 +90,6 @@
 			</div>
 		{/if}
 
-		{#if referringAgentName}
-			<div
-				class="p-3 bg-blue-100 border border-blue-400 text-blue-700 rounded-lg text-sm text-center mx-auto w-full md:max-w-md"
-			>
-				You are being referred by <strong>{referringAgentName}</strong>.
-			</div>
-		{/if}
 
 		<div class="mx-auto w-full md:max-w-md">
 			<div class="grid grid-cols-2 gap-3">
@@ -172,22 +176,26 @@
 			</button>
 		</div>
 
-		<input type="hidden" name="role" value="agent" />
+		<input type="hidden" name="role" value={referralCode ? 'customer' : 'agent'} />
 		{#if referralCode}
 			<input type="hidden" name="referralCode" value={referralCode} />
 		{/if}
 
 		<div class="w-full md:max-w-md mx-auto my-6 border-t border-gray-300"></div>
 
-		<div class="text-center text-xs text-gray-500 mb-4 px-4">
-			<p>By signing up as an agent, your application will be reviewed by our team.</p>
-			<p class="mt-1">You'll receive an email once your account is approved.</p>
-		</div>
+		{#if !referralCode}
+			<div class="text-center text-xs text-gray-500 mb-4 px-4">
+				<p>By signing up as an agent, your application will be reviewed by our team.</p>
+				<p class="mt-1">You'll receive an email once your account is approved.</p>
+			</div>
+		{/if}
 
 		<div class="flex justify-center mt-6">
 			<Button
 				type="submit"
-				label={isLoading ? 'Submitting application...' : 'Submit Application'}
+				label={isLoading
+					? (referralCode ? 'Creating account...' : 'Submitting application...')
+					: (referralCode ? 'Create Account' : 'Submit Application')}
 				width="220px"
 				disabled={isLoading}
 			/>
